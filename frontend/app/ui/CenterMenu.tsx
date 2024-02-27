@@ -9,7 +9,7 @@ export default function CenterMenu() {
     return (
         <div className=""> {/* Change justify-end to justify-start */}
             <div className="">
-                <DataFetcher setData={setData} />
+                <DataFetcher url="http://127.0.0.1:8000/angler_core/api" setData={setData} />
                 <DataDisplayer data={data} />
             </div>
         </div>

@@ -2,7 +2,6 @@
 
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-
 type MyData = {
     app_name: string;
     owner: string;
@@ -27,6 +26,6 @@ const postData = async (formData: MyData) => {
 };
 
 // Call the postData function with form data as parameter
-postData(jsonData); // Replace formData with your form data object
+ // Replace formData with your form data object
 
 export default postData;

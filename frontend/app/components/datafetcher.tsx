@@ -3,11 +3,16 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 
-const DataFetcher: React.FC<{ setData: React.Dispatch<React.SetStateAction<any>> }> = ({ setData }) => {
+interface DataFetcherProps {
+    url: string;
+    setData: React.Dispatch<React.SetStateAction<any>>;
+}
+
+const DataFetcher: React.FC<DataFetcherProps> = ({ url, setData }) => {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const response = await axios.get('http://127.0.0.1:8000/angler_core/api');
+                const response = await axios.get(url);
                 setData(response.data);
                 console.log(response.data)
             } catch (error) {
@@ -16,7 +21,7 @@ const DataFetcher: React.FC<{ setData: React.Dispatch<React.SetStateAction<any>>
         };
 
         fetchData();
-    }, [setData]);
+    }, [url, setData]);
 
     return null; // Server-side component doesn't render anything
 };

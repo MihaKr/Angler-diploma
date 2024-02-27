@@ -10,3 +10,11 @@ class Applications(models.Model):
     date_created = models.DateTimeField(auto_now_add=True, null=True, blank=True)
     date_last_Modified = models.DateTimeField(auto_now_add=True, null=True, blank=True)
 
+class ApplicationContainers(models.Model):
+    app_container_id = models.AutoField(primary_key=True)
+    app_id = models.IntegerField(blank=True, null=True)
+    container_id = models.IntegerField(blank=True, null=True)
+    prev_container = models.IntegerField(blank=True, null=True)
+    next_container = models.IntegerField(blank=True, null=True)
+
+

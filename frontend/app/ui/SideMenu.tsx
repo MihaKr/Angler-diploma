@@ -15,7 +15,6 @@ export default function SideMenu() {
                     <MenuButton text={"Recent files"}/>
                     <MenuButton text={"Tutorials document"}/>
                 </div>
-
             </div>
         </div>
     );
