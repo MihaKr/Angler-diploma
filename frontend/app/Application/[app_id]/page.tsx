@@ -14,8 +14,9 @@ import DragableComponent from "@/app/components/DraggableComponent";
 export default function Page({ params }: { params: { app_id: number } }) {
     const [data, setData] = useState<any>([]);
 
+    //TODO dodaj en datafetch za vse containerje
     return (
-        <div className="min-h-screen bg-Angler-Text-Grey">
+        <div className="min-h-screen bg-Angler-Text-Grey relative">
             <div className="w-full h-full">
                 <DataFetcher url={`http://0.0.0.0:8000/angler_core/app_cont?id=${params.app_id}`} setData={setData}/>
                 app: {params.app_id}

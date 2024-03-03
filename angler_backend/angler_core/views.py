@@ -7,19 +7,19 @@ from .models import Applications, ApplicationContainers
 from .serializers import AnglerSerializer, AnglerAppContSerializer
 
 #applications
+# TODO dodaj get za id
+# TODO dodaj delete za ID 
 class AnglerListApiView(APIView):
     def get(self, request, *args, **kwargs):
         Apps = Applications.objects
         serializer = AnglerSerializer(Apps, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
-
     def post(self, request, *args, **kwargs):
         serializer = AnglerSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
 #application containers/modules
 class AnglerListAppContView(APIView):
 

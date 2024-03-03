@@ -13,13 +13,13 @@ const Pipeline: FC<DroppableProps> = (props) => {
     });
 
     return (
-        <ul className={styles.cart} ref={setNodeRef}>
+        <div className={styles.cart} ref={setNodeRef}>
             {props.items.map((item, idx) => (
                 <div key={`${item}-${idx}`} className={styles["cart-item"]}>
                     {item}
                 </div>
             ))}
-        </ul>
+        </div>
     );
 }
 

@@ -16,5 +16,7 @@ class ApplicationContainers(models.Model):
     container_id = models.IntegerField(blank=True, null=True)
     prev_container = models.IntegerField(blank=True, null=True)
     next_container = models.IntegerField(blank=True, null=True)
+    position_x = models.IntegerField(blank=True, null=True)
+    position_y = models.IntegerField(blank=True, null=True)
 
 

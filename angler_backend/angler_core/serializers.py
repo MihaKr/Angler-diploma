@@ -7,4 +7,4 @@ class AnglerSerializer(serializers.ModelSerializer):
 class AnglerAppContSerializer(serializers.ModelSerializer):
     class Meta:
         model = ApplicationContainers
-        fields = ["app_container_id", "container_id", "app_id", "prev_container", "next_container" ]
+        fields = ["app_container_id", "container_id", "app_id", "prev_container", "next_container", "position_x", "position_y" ]

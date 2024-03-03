@@ -1,61 +1,44 @@
-import React, {FC} from 'react';
-import {Translate, useDraggable} from '@dnd-kit/core';
-import { CSS } from '@dnd-kit/utilities';
-import {createSnapModifier} from '@dnd-kit/modifiers';
+import React, {FC, useState} from 'react';
+import {defaultCoordinates, Translate, useDraggable} from '@dnd-kit/core';
+import {Coordinates, CSS} from '@dnd-kit/utilities';
 import styles from "./DraggableComponent.module.css";
 
 interface DraggableProps {
+    tmp_key: string;
     children: number;
+    top?: number;
+    left?: number;
 }
 
-const DraggablecComponent: FC<DraggableProps> = (props) => {
+const DraggableComponent: FC<DraggableProps> = (props) => {
     const { attributes, listeners, setNodeRef, transform } = useDraggable({
-        id: props.children,
+        id: props.tmp_key,
         data: { title: props.children }
     });
 
-    const style = transform ? {
-        translate: `translate3d(${transform.x}px, ${transform.y}px, 0)`,
-    } : undefined;
+    console.log(props.left)
+    console.log(props.top)
 
+
+//props.top != 0 ? `absolute left-${props.left}px top-${props.top}0x` : "justify-center"                 className={`left-[${props.top}px] top-[${props.top}px]`}
     return (
-        <div
-            ref={setNodeRef}
-            className={styles["fruit-item"]}
-            style={{ transform: CSS.Translate.toString(transform) }}
-            {...attributes}
-            {...listeners}
-        >
-            {props.children}
-        </div>
+            <div
+                id={props.tmp_key}
+                ref={setNodeRef}
+                className={`bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full`}
+                style={{
+                    position: 'absolute',
+                    top: `${props.top}px`,
+                    left: `${props.left}px`,
+                    transform: CSS.Translate.toString(transform),
+                }}
+                {...attributes}
+                {...listeners}
+                key={props.tmp_key}
+            >
+                {props.children}
+            </div>
     );
 }
 
-export default DraggablecComponent;
-/*
-
-interface IFruitDraggable {
-  children: string;
-}
-
-const FruitDraggable: FC<IFruitDraggable> = (props) => {
-  const { attributes, listeners, setNodeRef, transform } = useDraggable({
-    id: props.children,
-    data: { title: props.children }
-  });
-
-  return (
-    <div
-      ref={setNodeRef}
-      className={styles["fruit-item"]}
-      style={{ transform: CSS.Translate.toString(transform) }}
-      {...attributes}
-      {...listeners}
-    >
-      {props.children}
-    </div>
-  );
-};
-
-export default FruitDraggable;
- */
+export default DraggableComponent;
