@@ -16,10 +16,6 @@ const DraggableComponent: FC<DraggableProps> = (props) => {
         data: { title: props.children }
     });
 
-    console.log(props.left)
-    console.log(props.top)
-
-
 //props.top != 0 ? `absolute left-${props.left}px top-${props.top}0x` : "justify-center"                 className={`left-[${props.top}px] top-[${props.top}px]`}
     return (
             <div

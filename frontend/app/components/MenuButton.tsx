@@ -6,6 +6,7 @@ import postData from "@/app/components/dataPost";
 
 interface MenuButtonProps {
     text: string
+    setShowModal? : React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 type MyData = {
@@ -23,14 +24,15 @@ const jsonData: MyData = {
 };
 
 const NewDoc = () => {
-        postData(jsonData)
+        //postData(jsonData)
 };
 
 
-export const MenuButton: React.FC<MenuButtonProps> = ({ text}) => {
+export const MenuButton: React.FC<MenuButtonProps> = ({ text, setShowModal}) => {
+    // @ts-ignore
     return (
-        <a href="#" type="button" onClick={NewDoc} className={"content-end inline-flex justify-between .flex-1 "}>
-            <div className={` flex items-center justify-center`}>
+        <a href="#" type="button" onClick={() => setShowModal(true)} className={"content-end inline-flex justify-between .flex-1 "}>
+            <div className={`flex items-center justify-center`}>
                 <p className={"hover:text-Angler-Dark_Blue text-Angler-Text-Grey flex items-center justify-center"}>
                     {text}
                 </p>

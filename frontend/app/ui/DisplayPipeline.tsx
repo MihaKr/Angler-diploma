@@ -12,7 +12,10 @@ import {act} from "react-dom/test-utils";
 
 //TODO dodaj en state za aktivne containerje ki se naloadjo iz fetch
 //TODO dodaj en state za vse containerje ki se naloadjo iz fetch
-//TODO duplkat fetch containerja ko dragan je na panel
+//TODO duplIkat containerja ko dragan je na panel
+//TODO puščica na container
+//TODO snap to Container
+//TODO run
 
 
 const DisplayPipeline: React.FC<{ data: any }> = ({ data }) => {

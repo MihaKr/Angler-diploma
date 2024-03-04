@@ -8,5 +8,4 @@ from .views import (
 urlpatterns = [
     path('api', AnglerListApiView.as_view()),
     path('app_cont', AnglerListAppContView.as_view()),
-
 ]
