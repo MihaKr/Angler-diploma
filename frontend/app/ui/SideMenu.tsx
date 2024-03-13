@@ -7,7 +7,7 @@ interface MenuButtonProps {
 export const SideMenu: React.FC<MenuButtonProps> = ({ setShowModal}) => {
 
     return (
-        <div className="flex justify-start h-screen"> {/* Change justify-end to justify-start */}
+        <div className="flex justify-start h-screen">
             <div className="bg-side-menu_gray p-8 max-h-full">
                 <div className="bg-Angler-Dark_Blue w-full flex justify-center items-center">
                     <p className="text-white">APPLOGO</p>

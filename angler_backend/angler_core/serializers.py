@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Applications, ApplicationContainers
+from .models import Applications, ApplicationContainers, AllContainers
 class AnglerSerializer(serializers.ModelSerializer):
     class Meta:
         model = Applications
@@ -8,3 +8,8 @@ class AnglerAppContSerializer(serializers.ModelSerializer):
     class Meta:
         model = ApplicationContainers
         fields = ["app_container_id", "container_id", "app_id", "prev_container", "next_container", "position_x", "position_y" ]
+
+class AllContainersSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = AllContainers
+        fields = ["container_id", "container_name"]

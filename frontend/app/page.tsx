@@ -15,7 +15,7 @@ export default function Index() {
         <div className="flex bg-white">
             <SideMenu setShowModal={setShowModal}/>
             <CenterMenu />
-            <CreateAppFormModal />
+            <CreateAppFormModal showModal={showModal} setShowModal={setShowModal}/>
         </div>
     )
 }

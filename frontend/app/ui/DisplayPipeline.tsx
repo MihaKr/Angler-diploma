@@ -12,15 +12,15 @@ import {act} from "react-dom/test-utils";
 
 //TODO dodaj en state za aktivne containerje ki se naloadjo iz fetch
 //TODO dodaj en state za vse containerje ki se naloadjo iz fetch
+//todo predelaj celo kodo tudi da bo gledlo iz app containerja za position
 //TODO duplIkat containerja ko dragan je na panel
 //TODO puščica na container
 //TODO snap to Container
 //TODO run
 
 
-const DisplayPipeline: React.FC<{ data: any }> = ({ data }) => {
-    const DefaultCoordinates = [{ x: 0, y: 0 }, { x: 0, y: 0 }]; // Example default coordinates
 
+const DisplayPipeline: React.FC<{ data: any }> = ({ data }) => {
     const [cartItems, setCartItems] = useState<string[]>([]);
     const [containers, setContainers] = useState<number[]>([]);
     const [active, setActive] = useState(0);
@@ -42,8 +42,8 @@ const DisplayPipeline: React.FC<{ data: any }> = ({ data }) => {
             const temp = [];
 
             for (let i = 0; i < data.length; i++) {
-                temp.push(data[i]["container_id"]);
-                updateCoordinates("container" + data[i]["container_id"] as unknown as string, {x:0, y:0})
+                temp.push(data[i]["app_container_id"]);
+                updateCoordinates("container" + data[i]["app_container_id"] as unknown as string, {x:data[i].position_x, y:data[i].position_y})
             }
             return temp;
         }
@@ -76,7 +76,6 @@ const DisplayPipeline: React.FC<{ data: any }> = ({ data }) => {
             let rect = x.getBoundingClientRect();
             updateCoordinates(e.active.id as unknown as string, {x: rect.left, y: rect.top});
         }
-        console.log(coordinates)
     }
 
 
@@ -118,19 +117,3 @@ const DisplayPipeline: React.FC<{ data: any }> = ({ data }) => {
 }
 
 export default DisplayPipeline;
-
-/*
-*
-*                     <h1>Fruit List</h1>
-                    <div className={styles["fruit-list"]}>
-                        {containers.map((container_id) => (
-                            <DraggableComponent tmp_key={'container' + container_id} top={coordinates['container' +container_id].y} left={coordinates['container' +container_id].x} key={'container' +container_id}>{container_id}</DraggableComponent>
-                        ))}
-                    </div>
-                </div>
-                <div className={styles["cart-section"]}>
-                    <h1>My Cart</h1>
-                    <Pipeline items={cartItems} />
-* */
-
-/**/

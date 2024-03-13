@@ -19,4 +19,6 @@ class ApplicationContainers(models.Model):
     position_x = models.IntegerField(blank=True, null=True)
     position_y = models.IntegerField(blank=True, null=True)
 
-
+class AllContainers(models.Model):
+    container_id = models.AutoField(primary_key=True, unique=True)
+    container_name = models.CharField(max_length=100)

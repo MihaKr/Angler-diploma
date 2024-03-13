@@ -17,7 +17,8 @@ const config: Config = {
         'custom-yellow':'#BAA333',
         'side-menu_gray': '#F5F5F5',
         'Angler-Dark_Blue': '#486AAD',
-        'Angler-Text-Grey': '#A0A0A0'
+        'Angler-Text-Grey': '#A0A0A0',
+        'Angler-Button_Blue': '#AAB9C8'
       }
     },
   },
