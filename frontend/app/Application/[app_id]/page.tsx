@@ -28,22 +28,43 @@ export default function Page({ params }: { params: { app_id: number } }) {
     const [allContainers, setAllContainers] = useState<any>([]);
 
     const handleClickAllContainers: React.MouseEventHandler<HTMLDivElement> = (event) => {
-        const tmp_cont = [...activeContainers];
-        let max = getMax(tmp_cont) + 1
-        let new_cont = {
-            "app_container_id": max, //max current +1,
-            "container_id": +event.currentTarget.id,//e id,
-            "app_id": +params.app_id, //convert to num
-            "prev_container": null,
-            "next_container": null,
-            "position_x": event.clientX,
-            "position_y": event.clientY
+        if(activeContainers.length > 0) {
+            const tmp_cont = [...activeContainers];
+            let max = getMax(tmp_cont) + 1
+            let new_cont = {
+                "app_container_id": max, //max current +1,
+                "container_id": +event.currentTarget.id,//e id,
+                "app_id": +params.app_id, //convert to num
+                "prev_container": null,
+                "next_container": null,
+                "position_x": event.clientX,
+                "position_y": event.clientY
+            }
+            tmp_cont.push(new_cont)
+
+            postData(new_cont, 'http://0.0.0.0:8000/angler_core/app_cont')
+
+            setActiveContainers(tmp_cont)
+
         }
-        tmp_cont.push(new_cont)
+        else {
+            let tmp_cont = [];
+            let max = 0
+            let new_cont = {
+                "app_container_id": max, //max current +1,
+                "container_id": +event.currentTarget.id,//e id,
+                "app_id": +params.app_id, //convert to num
+                "prev_container": null,
+                "next_container": null,
+                "position_x": event.clientX,
+                "position_y": event.clientY
+            }
+            tmp_cont.push(new_cont)
 
-        postData(new_cont, 'http://0.0.0.0:8000/angler_core/app_cont')
+            postData(new_cont, 'http://0.0.0.0:8000/angler_core/app_cont')
 
-        setActiveContainers(tmp_cont)
+            setActiveContainers(tmp_cont)
+        }
     }
 
     function getMax(arr: AllContainersI[]) {
@@ -70,7 +91,7 @@ export default function Page({ params }: { params: { app_id: number } }) {
             </div>
             <div>
                 <AllContainers all_containers={allContainers} drag_func={handleClickAllContainers}/>
-                <DisplayPipeline data={activeContainers}/>
+                <DisplayPipeline data={activeContainers} updateData={setActiveContainers}/>
             </div>
         </div>)
 }

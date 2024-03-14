@@ -9,6 +9,7 @@ import {createSnapModifier} from "@dnd-kit/modifiers";
 import styles from "./App.module.css";
 import {Coordinates, CSS} from "@dnd-kit/utilities";
 import {act} from "react-dom/test-utils";
+import {number} from "prop-types";
 
 //TODO dodaj en state za aktivne containerje ki se naloadjo iz fetch
 //TODO dodaj en state za vse containerje ki se naloadjo iz fetch
@@ -18,40 +19,45 @@ import {act} from "react-dom/test-utils";
 //TODO snap to Container
 //TODO run
 
+//TODO overlay za nov drag
 
+interface AllContainersI {
+    app_container_id: number;
+    container_id: number;
+    app_id: number;
+    prev_container: number;
+    next_container: number;
+    position_x: number;
+    position_y: number;
+}
 
-const DisplayPipeline: React.FC<{ data: any }> = ({ data }) => {
+interface DisplayPipelineProps {
+    data: any;
+    updateData: React.Dispatch<React.SetStateAction<any>>;
+}
+
+const DisplayPipeline: React.FC<DisplayPipelineProps> = ({ data, updateData }) => {
     const [cartItems, setCartItems] = useState<string[]>([]);
-    const [containers, setContainers] = useState<number[]>([]);
     const [active, setActive] = useState(0);
-    const [coordinates, setCoordinates] = useState<{ [key: string]: Coordinates }>({
-        "container0": { x: 0, y: 0 },
-    });
     const [gridSize, setGridSize] = React.useState(10);
 
-    const updateCoordinates = (key: string, newCoordinates: Coordinates) => {
-        setCoordinates(prevCoordinates => ({
-            ...prevCoordinates,
-            [key]: newCoordinates
-        }));
+    const updateCoordinates = (key: number, newCoordinates: Coordinates) => {
+        let tmp = [...data];
+
+        tmp[key].position_x = newCoordinates.x;
+        tmp[key].position_y = newCoordinates.y;
+
+        updateData(tmp)
     };
 
-
-    useEffect(() => {
-        function createContainerArray(data: any): any[] {
-            const temp = [];
-
-            for (let i = 0; i < data.length; i++) {
-                temp.push(data[i]["app_container_id"]);
-                updateCoordinates("container" + data[i]["app_container_id"] as unknown as string, {x:data[i].position_x, y:data[i].position_y})
+    const get_ind = (arr: AllContainersI[], key: number) => {
+        for (let i = 0; i < arr.length; i++) {
+            if(arr[i].app_container_id== key) {
+                return i
             }
-            return temp;
         }
-
-        const tempContainers = createContainerArray(data);
-        setContainers(tempContainers);
-
-    }, [data]);
+        return null
+    };
 
     const addItemsToCart = (e: DragEndEvent) => {
         const newItem = e.active.data.current?.title;
@@ -62,9 +68,13 @@ const DisplayPipeline: React.FC<{ data: any }> = ({ data }) => {
 
         let delta = e.delta;
 
-        // Ensure to use the current active container ID here
         const currentActive = String(active);
-        updateCoordinates(currentActive, calculateCord(coordinates[currentActive].x, coordinates[currentActive].y, delta));
+        // @ts-ignore
+        let n:number = get_ind([...data],+currentActive)
+
+        console.log(calculateCord(data[n].position_x, data[n].position_y, delta))
+
+        updateCoordinates(n, calculateCord(data[n].position_x, data[n].position_y, delta));
     };
 
 
@@ -74,7 +84,9 @@ const DisplayPipeline: React.FC<{ data: any }> = ({ data }) => {
 
         if (x != null) {
             let rect = x.getBoundingClientRect();
-            updateCoordinates(e.active.id as unknown as string, {x: rect.left, y: rect.top});
+            // @ts-ignore
+            let n:number = get_ind([...data], e.active.id)
+            updateCoordinates(n, {x: rect.left, y: rect.top});
         }
     }
 
@@ -88,12 +100,10 @@ const DisplayPipeline: React.FC<{ data: any }> = ({ data }) => {
 
     const snapToGrid = useMemo(() => createSnapModifier(gridSize), [gridSize]);
 
+    // @ts-ignore
+    // @ts-ignore
 
-    useEffect(() => {
-        console.log(coordinates);
-    }, [coordinates]);
-
-
+    console.log(typeof(data))
     return (
         <DndContext onDragEnd={addItemsToCart}
                     onDragStart={handleDragStart}
@@ -101,14 +111,16 @@ const DisplayPipeline: React.FC<{ data: any }> = ({ data }) => {
         >
 
             <div className="max-w-full and max-h-full">
-                {containers.map((container_id) => (
+                {data.map((container:AllContainersI, index: number,) => (
                     <DraggableComponent
-                        tmp_key={'container' + container_id}
-                        top={coordinates['container' + container_id].y}
-                        left={coordinates['container' + container_id].x}
-                        key={'container' + container_id}
+                        tmp_key={String(container.app_container_id)}
+                        top={container.position_y}
+                        left={container.position_x}
+                        //top={coordinates['container' + container_id].y}
+                        //left={coordinates['container' + container_id].x}
+                        key={String(container.app_container_id)}
                     >
-                        {container_id}
+                        {container.app_container_id}
                     </DraggableComponent>
                 ))}
             </div>
@@ -117,3 +129,17 @@ const DisplayPipeline: React.FC<{ data: any }> = ({ data }) => {
 }
 
 export default DisplayPipeline;
+
+/*
+*                     <DraggableComponent
+                        tmp_key={String(container.container_id)}
+                        top={data[index].position_x}
+                        left={data[index].position_x}
+                        //top={coordinates['container' + container_id].y}
+                        //left={coordinates['container' + container_id].x}
+                        key={String(container_id)}
+                    >
+                        {container_id}
+                    </DraggableComponent>
+*
+* */
