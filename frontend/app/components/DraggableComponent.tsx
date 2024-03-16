@@ -21,7 +21,7 @@ const DraggableComponent: FC<DraggableProps> = (props) => {
             <div
                 id={props.tmp_key}
                 ref={setNodeRef}
-                className={`bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full`}
+                className={`bg-Angler-Button_Blue hover:bg-blue-700 rounded-2xl p-4 max-w-h-screen`}
                 style={{
                     position: 'absolute',
                     top: `${props.top}px`,

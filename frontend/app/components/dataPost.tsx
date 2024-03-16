@@ -9,6 +9,7 @@ type MyData = {
 };
 
 const postData = async (formData: any, url: string) => {
+    console.log(formData)
     try {
         const response = await axios.post(url, formData);
         console.log('Response data:', response.data);

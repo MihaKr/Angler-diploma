@@ -61,11 +61,29 @@ class AnglerListAppContView(APIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     def put(self, request, *args, **kwargs):
-        serializer = AnglerAppContSerializer(data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        app_id_q = request.query_params.get('id')
+        app_cont_id_q = request.query_params.get('app_cont_id')
+
+        cont = ApplicationContainers.objects.filter(app_id=app_id_q,
+                                                    app_container_id=app_cont_id_q).first()
+        print(cont)
+        print(app_id_q)
+        print(app_cont_id_q)
+
+        if cont:
+            # Update specific field with app_container_id
+            new_value = request.data.get('position_x')
+            cont.position_x = new_value
+
+            new_value = request.data.get('position_y')
+            cont.position_y = new_value
+
+            cont.save()
+
+            serializer = AnglerAppContSerializer(cont)
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        else:
+            return Response({"error": "Object not found"}, status=status.HTTP_404_NOT_FOUND)
 
 class AnglerListAllContView(APIView):
     def get(self, request, *args, **kwargs):

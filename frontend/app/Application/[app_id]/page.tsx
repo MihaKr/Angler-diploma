@@ -10,6 +10,7 @@ import DragableComponent from "@/app/components/DraggableComponent";
 import AllContainers from "@/app/components/AllContainers";
 import {number} from "prop-types";
 import postData from "@/app/components/dataPost";
+import {DragEndEvent} from "@dnd-kit/core";
 
 // pages/index.tsx
 
@@ -27,37 +28,36 @@ export default function Page({ params }: { params: { app_id: number } }) {
     const [activeContainers, setActiveContainers] = useState<any>([]);
     const [allContainers, setAllContainers] = useState<any>([]);
 
-    const handleClickAllContainers: React.MouseEventHandler<HTMLDivElement> = (event) => {
+    const handleClickAllContainers = (e: DragEndEvent) => {
         if(activeContainers.length > 0) {
             const tmp_cont = [...activeContainers];
             let max = getMax(tmp_cont) + 1
             let new_cont = {
                 "app_container_id": max, //max current +1,
-                "container_id": +event.currentTarget.id,//e id,
+                "container_id": +e.active.id,//e id,
                 "app_id": +params.app_id, //convert to num
                 "prev_container": null,
                 "next_container": null,
-                "position_x": event.clientX,
-                "position_y": event.clientY
+                "position_x": e.delta.x,
+                "position_y": e.delta.y
             }
             tmp_cont.push(new_cont)
 
             postData(new_cont, 'http://0.0.0.0:8000/angler_core/app_cont')
 
             setActiveContainers(tmp_cont)
-
         }
         else {
             let tmp_cont = [];
             let max = 0
             let new_cont = {
                 "app_container_id": max, //max current +1,
-                "container_id": +event.currentTarget.id,//e id,
+                "container_id": +e.active,//e id,
                 "app_id": +params.app_id, //convert to num
                 "prev_container": null,
                 "next_container": null,
-                "position_x": event.clientX,
-                "position_y": event.clientY
+                "position_x": +e.delta.x,
+                "position_y": +e.delta.y
             }
             tmp_cont.push(new_cont)
 

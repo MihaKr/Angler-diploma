@@ -13,9 +13,12 @@ interface ContainerButtonProps {
 const ContainerButton: FC<ContainerButtonProps>= ({ container_id,container_name, drag_func }) => {
     //props.top != 0 ? `absolute left-${props.left}px top-${props.top}0x` : "justify-center"                 className={`left-[${props.top}px] top-[${props.top}px]`}
     return (
-        <button id={container_id} className="bg-Angler-Button_Blue rounded-2xl p-4 max-w-h-screen" onClick={drag_func}>
-            {container_name}
-        </button>
+        <div>
+            <DraggableComponent tmp_key={String(container_id)}>
+                {1}
+            </DraggableComponent>
+        </div>
+
     );
 }
 

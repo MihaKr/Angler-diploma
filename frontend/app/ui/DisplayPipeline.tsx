@@ -10,6 +10,8 @@ import styles from "./App.module.css";
 import {Coordinates, CSS} from "@dnd-kit/utilities";
 import {act} from "react-dom/test-utils";
 import {number} from "prop-types";
+import dataPut from "@/app/components/dataPut";
+import PipelineContainer from "@/app/components/PipelineContainer";
 
 //TODO dodaj en state za aktivne containerje ki se naloadjo iz fetch
 //TODO dodaj en state za vse containerje ki se naloadjo iz fetch
@@ -47,6 +49,10 @@ const DisplayPipeline: React.FC<DisplayPipelineProps> = ({ data, updateData }) =
         tmp[key].position_x = newCoordinates.x;
         tmp[key].position_y = newCoordinates.y;
 
+        tmp[key].app_id
+
+        tmp[key].app_id
+
         updateData(tmp)
     };
 
@@ -75,6 +81,9 @@ const DisplayPipeline: React.FC<DisplayPipelineProps> = ({ data, updateData }) =
         console.log(calculateCord(data[n].position_x, data[n].position_y, delta))
 
         updateCoordinates(n, calculateCord(data[n].position_x, data[n].position_y, delta));
+
+        dataPut(data[n], `http://0.0.0.0:8000/angler_core/app_cont?id=${data[n].app_id}&app_cont_id=${data[n].app_container_id}`)
+        console.log(data[n])
     };
 
 
@@ -100,10 +109,6 @@ const DisplayPipeline: React.FC<DisplayPipelineProps> = ({ data, updateData }) =
 
     const snapToGrid = useMemo(() => createSnapModifier(gridSize), [gridSize]);
 
-    // @ts-ignore
-    // @ts-ignore
-
-    console.log(typeof(data))
     return (
         <DndContext onDragEnd={addItemsToCart}
                     onDragStart={handleDragStart}
@@ -112,7 +117,7 @@ const DisplayPipeline: React.FC<DisplayPipelineProps> = ({ data, updateData }) =
 
             <div className="max-w-full and max-h-full">
                 {data.map((container:AllContainersI, index: number,) => (
-                    <DraggableComponent
+                    <PipelineContainer
                         tmp_key={String(container.app_container_id)}
                         top={container.position_y}
                         left={container.position_x}
@@ -121,7 +126,7 @@ const DisplayPipeline: React.FC<DisplayPipelineProps> = ({ data, updateData }) =
                         key={String(container.app_container_id)}
                     >
                         {container.app_container_id}
-                    </DraggableComponent>
+                    </PipelineContainer>
                 ))}
             </div>
         </DndContext>
