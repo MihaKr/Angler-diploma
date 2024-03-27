@@ -9,6 +9,7 @@ import NewDisplayPipeline from "@/app/ui/NewDisplayPipeline";
 import {number} from "prop-types";
 import datafetcher from "@/app/components/datafetcher";
 import dataFetch from "@/app/components/dataFetch";
+import RunAppButton from "@/app/components/RunAppButton";
 
 // pages/index.tsx
 
@@ -91,13 +92,21 @@ export default function Page({ params }: { params: { app_id: number } }) {
 
                 app: {params.app_id}
             </div>
-            <div className="flex">
-                <div className="w-1/5 bg-gray-600">
-                    <AllContainers all_containers={allContainers} drag_func={handleClickAllContainers}/>
+            <div className="grid grid-cols-5 min-h-screen">
+                <div className="col-span-1 bg-gray-600 flex flex-col justify-between h-full">
+                    <div>
+                        <AllContainers all_containers={allContainers} drag_func={handleClickAllContainers}/>
+                    </div>
+                    <div className="flex-grow"></div>
+                    <div>
+                        <RunAppButton app_id={params.app_id}/>
+                    </div>
                 </div>
-                <div className="w-4/5">
-                    <NewDisplayPipeline data={activeContainers} updateData={setActiveContainers} edge_data={edges} update_edge={setEdges} app_id={params.app_id}/>
+                <div className="col-span-4">
+                    <NewDisplayPipeline data={activeContainers} updateData={setActiveContainers} edge_data={edges}
+                                        update_edge={setEdges} app_id={params.app_id}/>
                 </div>
             </div>
+
         </div>)
 }

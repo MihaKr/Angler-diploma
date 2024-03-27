@@ -14,7 +14,7 @@ from angler_core.models import LinkContainers, ApplicationContainers, AllContain
 client.volumes.create(name='angler_store', driver='local')
 
 mount_path = "/mnt/my_volume"
-host_dir = os.path.abspath("../../docker_host")
+host_dir = os.path.abspath("../docker_host")
 container_dir = "/mnt/host"
 
 def getLinks(app_id):
@@ -52,7 +52,8 @@ def getContainerName(list_cont):
 def build_images(list_cont):
     images = {}
     for i in list_cont:
-        read_path = os.path.abspath(os.path.join("../../containers", i))
+        read_path = os.path.abspath(os.path.join("../containers", i))
+        print(f"Reading path for container {i}: {read_path}")  # Add this line for debugging
         images[i] = client.images.build(path=read_path, tag=i)
 
     return images
@@ -75,8 +76,8 @@ def run_containers(list_img):
 def delete_cont(list_cont):
     client.containers.prune(list_cont)
 
-def run_app_func():
-    a,b = getLinks(8)
+def run_app_func(id):
+    a,b = getLinks(id)
     print(a)
     print(b)
     c = getAppContainers(b)

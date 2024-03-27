@@ -8,10 +8,10 @@ client.volumes.create(name='angler_store', driver='local')
 
 mount_path = "/mnt/my_volume"  # Mount path inside the container
 
-host_dir = os.path.abspath("../docker_host")
+host_dir = os.path.abspath("../../docker_host")
 container_dir = "/mnt/host"
 
-read_path = "../containers/read/"
+read_path = "../../containers/read/"
 read_image, _ = client.images.build(path=read_path, tag="read")
 
 read = client.containers.run(

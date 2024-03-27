@@ -5,14 +5,8 @@ from rest_framework import status
 from rest_framework import permissions
 from .models import Applications, ApplicationContainers, AllContainers, LinkContainers
 from .serializers import AnglerSerializer, AnglerAppContSerializer, AllContainersSerializer, LinkContainersSerializer, RunAppSerializer
-import sys
-import os
 
-# Add the directory containing sql_test.py to sys.path
-sys.path.append('../../docker_manager/sql_test.py')
-
-# Import run_app function from sql_test.py
-from sql_test import run_app_func
+from .sql_test import run_app_func
 
 
 #TODO: update za app containers
@@ -169,10 +163,8 @@ class LinkContainersView(APIView):
         else:
             return Response({"error": "Object not found"}, status=status.HTTP_404_NOT_FOUND)
 
-class RunApp(APIView):
+class RunAppView(APIView):
     def post(self, request, *args, **kwargs):
-        serializer = RunAppSerializer(data=request.data)
-        if serializer.is_valid():
-            runpy
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        x = request.data.get("app_id")
+        run_app_func(x)
+        return Response({"message": "app_accepted"}, status=status.HTTP_200_OK)

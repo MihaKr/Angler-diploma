@@ -1,1 +1,4 @@
 ta file je bil na hostu
+test dynamic
+app 66
+klik v appu
