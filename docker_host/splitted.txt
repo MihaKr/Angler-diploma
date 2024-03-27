@@ -1,0 +1,2 @@
+ta file je bil na hostu
+dodali smo to besedilo in vrnili na host

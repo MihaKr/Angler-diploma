@@ -3,8 +3,17 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework import permissions
-from .models import Applications, ApplicationContainers, AllContainers
-from .serializers import AnglerSerializer, AnglerAppContSerializer, AllContainersSerializer
+from .models import Applications, ApplicationContainers, AllContainers, LinkContainers
+from .serializers import AnglerSerializer, AnglerAppContSerializer, AllContainersSerializer, LinkContainersSerializer, RunAppSerializer
+import sys
+import os
+
+# Add the directory containing sql_test.py to sys.path
+sys.path.append('../../docker_manager/sql_test.py')
+
+# Import run_app function from sql_test.py
+from sql_test import run_app_func
+
 
 #TODO: update za app containers
 #applications
@@ -51,7 +60,9 @@ class AnglerListAppContView(APIView):
             except ApplicationContainers.DoesNotExist:
                 return Response({"message": "Application Container not found"}, status=status.HTTP_404_NOT_FOUND)
         else:
-            return Response({"message": "ID parameter is missing"}, status=status.HTTP_400_BAD_REQUEST)
+            app_container = ApplicationContainers.objects
+            serializer = AnglerAppContSerializer(app_container, many=True)
+            return Response(serializer.data, status=status.HTTP_200_OK)
 
     def post(self, request, *args, **kwargs):
         serializer = AnglerAppContSerializer(data=request.data)
@@ -66,22 +77,20 @@ class AnglerListAppContView(APIView):
 
         cont = ApplicationContainers.objects.filter(app_id=app_id_q,
                                                     app_container_id=app_cont_id_q).first()
-        print(cont)
-        print(app_id_q)
-        print(app_cont_id_q)
 
         if cont:
-            # Update specific field with app_container_id
-            new_value = request.data.get('position_x')
-            cont.position_x = new_value
+            if request.data['position']['x'] is not None:
+                print(request.data.get('position'))
+                cont_pos = request.data.get('position')
+                cont.position_x = cont_pos['x']
+                cont.position_y = cont_pos['y']
 
-            new_value = request.data.get('position_y')
-            cont.position_y = new_value
+                cont.save()
 
-            cont.save()
-
-            serializer = AnglerAppContSerializer(cont)
-            return Response(serializer.data, status=status.HTTP_200_OK)
+                serializer = AnglerAppContSerializer(cont)
+                return Response(serializer.data, status=status.HTTP_200_OK)
+            else:
+                print("none")
         else:
             return Response({"error": "Object not found"}, status=status.HTTP_404_NOT_FOUND)
 
@@ -90,3 +99,80 @@ class AnglerListAllContView(APIView):
         apps = AllContainers.objects
         serializer = AllContainersSerializer(apps, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
+
+class LinkContainersView(APIView):
+    def get(self, request, *args, **kwargs):
+        app_id_q = request.query_params.get('id')
+
+        if app_id_q:
+            try:
+                links = LinkContainers.objects.filter(app_id_link=app_id_q)
+                serializer = LinkContainersSerializer(links, many=True)
+                return Response(serializer.data, status=status.HTTP_200_OK)
+            except ApplicationContainers.DoesNotExist:
+                return Response({"message": "Application Container not found"}, status=status.HTTP_404_NOT_FOUND)
+        else:
+            links = LinkContainers.objects
+            serializer = LinkContainersSerializer(links, many=True)
+            return Response(serializer.data, status=status.HTTP_200_OK)
+
+
+    def post(self, request, *args, **kwargs):
+        serializer = LinkContainersSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    def delete(self, request, *args, **kwargs):
+        origin_q = request.data.get('origin')
+        origin_e_q = request.data.get('origin_edge')
+        destination_q = request.data.get('destination')
+        destination_e_q = request.data.get('destination_edge')
+
+
+        to_be_deleted = LinkContainers.objects.filter(origin = origin_q,
+                                                      origin_edge = origin_e_q,
+                                                      destination = destination_q,
+                                                      destination_edge = destination_e_q).first()
+
+        if to_be_deleted:
+            to_be_deleted.delete()
+            return Response({"message": "Object deleted successfully."}, status=status.HTTP_200_OK)
+        else:
+            return Response({"message": "Object not found."}, status=status.HTTP_404_NOT_FOUND)
+
+    def put(self, request, *args, **kwargs):
+        origin_q_old = request.data.get('origin_old')
+        origin_e_q_old = request.data.get('origin_edge_old')
+        destination_q_old = request.data.get('destination_old')
+        destination_e_q_old = request.data.get('destination_edge_old')
+
+        origin_q_new = request.data.get('origin_new')
+        origin_e_q_new = request.data.get('origin_edge_new')
+        destination_q_new = request.data.get('destination_new')
+        destination_e_q_new= request.data.get('destination_edge_new')
+
+        to_be_updated = LinkContainers.objects.filter(origin=origin_q_old,
+                                                      origin_edge=origin_e_q_old,
+                                                      destination=destination_q_old,
+                                                      destination_edge=destination_e_q_old).first()
+
+        if to_be_updated:
+            print(to_be_updated)
+            to_be_updated.destination = destination_q_new
+            to_be_updated.destination_edge = destination_e_q_new
+
+            to_be_updated.save()
+            serializer = LinkContainersSerializer(to_be_updated)
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        else:
+            return Response({"error": "Object not found"}, status=status.HTTP_404_NOT_FOUND)
+
+class RunApp(APIView):
+    def post(self, request, *args, **kwargs):
+        serializer = RunAppSerializer(data=request.data)
+        if serializer.is_valid():
+            runpy
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

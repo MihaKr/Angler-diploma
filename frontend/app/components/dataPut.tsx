@@ -5,6 +5,8 @@ import axios from 'axios';
 
 
 const postData = async (formData: any, url: string) => {
+    console.log("data put")
+    console.log(formData)
     try {
         const response = await axios.put(url, formData);
         console.log('Response data:', response.data);

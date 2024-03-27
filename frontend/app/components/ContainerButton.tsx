@@ -15,7 +15,7 @@ const ContainerButton: FC<ContainerButtonProps>= ({ container_id,container_name,
     return (
         <div>
             <DraggableComponent tmp_key={String(container_id)}>
-                {1}
+                {container_name}
             </DraggableComponent>
         </div>
 

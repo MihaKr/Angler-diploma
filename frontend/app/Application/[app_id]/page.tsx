@@ -1,16 +1,14 @@
 'use client'
 
-import {useRouter} from 'next/navigation'
 import React, {useEffect, useState} from "react";
-import SideMenu from "@/app/ui/SideMenu";
-import CenterMenu from "@/app/ui/CenterMenu";
 import DataFetcher from "@/app/components/datafetcher";
-import DisplayPipeline from "@/app/ui/DisplayPipeline";
-import DragableComponent from "@/app/components/DraggableComponent";
 import AllContainers from "@/app/components/AllContainers";
-import {number} from "prop-types";
 import postData from "@/app/components/dataPost";
 import {DragEndEvent} from "@dnd-kit/core";
+import NewDisplayPipeline from "@/app/ui/NewDisplayPipeline";
+import {number} from "prop-types";
+import datafetcher from "@/app/components/datafetcher";
+import dataFetch from "@/app/components/dataFetch";
 
 // pages/index.tsx
 
@@ -20,48 +18,48 @@ interface AllContainersI {
     app_id: number;
     prev_container: number;
     next_container: number;
-    position_x: number;
-    position_y: number;
+    position: { x: number, y: number }
 }
 
 export default function Page({ params }: { params: { app_id: number } }) {
     const [activeContainers, setActiveContainers] = useState<any>([]);
     const [allContainers, setAllContainers] = useState<any>([]);
+    const [edges, setEdges] = useState<any>([]);
 
-    const handleClickAllContainers = (e: DragEndEvent) => {
+
+    const handleClickAllContainers = async (e: DragEndEvent) => {
         if(activeContainers.length > 0) {
             const tmp_cont = [...activeContainers];
-            let max = getMax(tmp_cont) + 1
             let new_cont = {
-                "app_container_id": max, //max current +1,
+                "app_container_id": 0, //max current +1,
                 "container_id": +e.active.id,//e id,
                 "app_id": +params.app_id, //convert to num
                 "prev_container": null,
                 "next_container": null,
-                "position_x": e.delta.x,
-                "position_y": e.delta.y
+                "position": { "x": +e.delta.x, "y": +e.delta.y }
             }
+            const r = await postData(new_cont, 'http://0.0.0.0:8000/angler_core/app_cont')
+            new_cont.app_container_id = r.app_container_id
             tmp_cont.push(new_cont)
 
-            postData(new_cont, 'http://0.0.0.0:8000/angler_core/app_cont')
-
             setActiveContainers(tmp_cont)
+
         }
+
         else {
             let tmp_cont = [];
-            let max = 0
             let new_cont = {
-                "app_container_id": max, //max current +1,
-                "container_id": +e.active,//e id,
+                "app_container_id": 0,
+                "container_id": +e.active.id,//e id,
                 "app_id": +params.app_id, //convert to num
                 "prev_container": null,
                 "next_container": null,
-                "position_x": +e.delta.x,
-                "position_y": +e.delta.y
+                "position": { "x": +e.delta.x, "y": +e.delta.y }
             }
-            tmp_cont.push(new_cont)
 
-            postData(new_cont, 'http://0.0.0.0:8000/angler_core/app_cont')
+            const r = await postData(new_cont, 'http://0.0.0.0:8000/angler_core/app_cont')
+            new_cont.app_container_id = r.app_container_id
+            tmp_cont.push(new_cont)
 
             setActiveContainers(tmp_cont)
         }
@@ -83,15 +81,23 @@ export default function Page({ params }: { params: { app_id: number } }) {
     //TODO v backendu endpoint za vse containers
 
     return (
-        <div className="min-h-screen bg-Angler-Text-Grey relative">
+        <div className="min-h-screen relative">
             <div className="w-full h-full">
-                <DataFetcher url={`http://0.0.0.0:8000/angler_core/app_cont?id=${params.app_id}`} setData={setActiveContainers}/>
+                <DataFetcher url={`http://0.0.0.0:8000/angler_core/app_cont?id=${params.app_id}`}
+                             setData={setActiveContainers}/>
+                <DataFetcher url={`http://0.0.0.0:8000/angler_core/cont_link?id=${params.app_id}`}
+                             setData={setEdges}/>
                 <DataFetcher url={`http://0.0.0.0:8000/angler_core/all_cont`} setData={setAllContainers}/>
+
                 app: {params.app_id}
             </div>
-            <div>
-                <AllContainers all_containers={allContainers} drag_func={handleClickAllContainers}/>
-                <DisplayPipeline data={activeContainers} updateData={setActiveContainers}/>
+            <div className="flex">
+                <div className="w-1/5 bg-gray-600">
+                    <AllContainers all_containers={allContainers} drag_func={handleClickAllContainers}/>
+                </div>
+                <div className="w-4/5">
+                    <NewDisplayPipeline data={activeContainers} updateData={setActiveContainers} edge_data={edges} update_edge={setEdges} app_id={params.app_id}/>
+                </div>
             </div>
         </div>)
 }
