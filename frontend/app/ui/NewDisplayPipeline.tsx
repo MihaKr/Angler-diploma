@@ -3,16 +3,6 @@
 import React, {useEffect, useMemo, useState} from 'react';
 import ReactFlow, {Edge, ReactFlowProvider, Node, Background, useStoreApi, Position, MiniMap} from "reactflow";
 import Flow from "@/app/components/Flow";
-import ContNode from "@/app/components/ContNode";
-import {node, number} from "prop-types";
-import PipelineContainer from "@/app/components/PipelineContainer";
-import {nice} from "d3-array";
-import contNode from "@/app/components/ContNode";
-import {DragEndEvent} from "@dnd-kit/core";
-import dataPut from "@/app/components/dataPut";
-import {set} from "yaml/dist/schema/yaml-1.1/set";
-import {Coordinates} from "@dnd-kit/utilities";
-import {describe} from "node:test";
 
 interface AllContainersI {
     app_container_id: number;
@@ -38,6 +28,11 @@ interface DisplayPipelineProps {
     edge_data: any
     update_edge: React.Dispatch<React.SetStateAction<any>>;
     app_id: number
+    setShowModal : React.Dispatch<React.SetStateAction<boolean>>;
+    app_cont_id: string;
+    setApp_cont_id:  React.Dispatch<React.SetStateAction<string>>;
+    conf_file: String;
+    setConfFile:  React.Dispatch<React.SetStateAction<string>>;
 }
 
 const nodeSize = {
@@ -46,13 +41,12 @@ const nodeSize = {
 };
 
 
-const DisplayPipeline: React.FC<DisplayPipelineProps> = ({ data, updateData, edge_data, update_edge, app_id }) => {
+const DisplayPipeline: React.FC<DisplayPipelineProps> = ({ data, updateData, edge_data, update_edge, app_id, setShowModal, app_cont_id, setApp_cont_id, conf_file, setConfFile }) => {
     const [nodes, setNodes] = useState<Node[]>([]);
     const [edges, setEdges] = useState<Edge[]>([]);
-    const [loading, setLoading] = useState(true); // Add loading state
+    const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        console.log(nodes)
         setNodes(
             data.map((data: AllContainersI, index: number) => ({
                 id: `node-${ data.app_container_id}`,
@@ -64,7 +58,6 @@ const DisplayPipeline: React.FC<DisplayPipelineProps> = ({ data, updateData, edg
     }, [data]);
 
     useEffect(() => {
-        console.log(edges)
         setEdges(
             edge_data.map((data: edge, index: number) => ({
                 id: index,
@@ -87,17 +80,15 @@ const DisplayPipeline: React.FC<DisplayPipelineProps> = ({ data, updateData, edg
         return <p>Loading...</p>; // Render loading indicator
     }
 
-    //console.log = console.warn = console.error = () => {};
-
     return (
-        <div className="mx-auto w-4/5" >
             <div className="max-w-full and max-h-full">
-                <ReactFlowProvider initialNodes={nodes} initialEdges={edges}>
-                    <Flow nodes={nodes} edges={edges} setNodes={setNodes} setEdges={setEdges} app_id={app_id}/>
+                <ReactFlowProvider     // @ts-ignore
+                    initialNodes={nodes} initialEdges={edges}>
+                    <Flow nodes={nodes} edges={edges} setNodes={setNodes} setEdges={setEdges} app_id={app_id} setShowModal={setShowModal}
+                    setApp_cont_id={setApp_cont_id} app_cont_id={app_cont_id} setConfFile={setConfFile} conf_file={conf_file}/>
                     <MiniMap />
                 </ReactFlowProvider>
             </div>
-        </div>
     );
 }
 

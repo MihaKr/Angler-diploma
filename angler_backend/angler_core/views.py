@@ -3,6 +3,8 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework import permissions
+
+from docker_manager.add_new_container import run_add_new_container
 from .models import Applications, ApplicationContainers, AllContainers, LinkContainers
 from .serializers import AnglerSerializer, AnglerAppContSerializer, AllContainersSerializer, LinkContainersSerializer, RunAppSerializer
 
@@ -71,6 +73,7 @@ class AnglerListAppContView(APIView):
 
         cont = ApplicationContainers.objects.filter(app_id=app_id_q,
                                                     app_container_id=app_cont_id_q).first()
+        args = ApplicationContainers.objects.filter(app_container_id=app_cont_id_q).first()
 
         if cont:
             if request.data['position']['x'] is not None:
@@ -85,14 +88,51 @@ class AnglerListAppContView(APIView):
                 return Response(serializer.data, status=status.HTTP_200_OK)
             else:
                 print("none")
+        elif args:
+            print(request.data)
+            print(args)
+            args.arguments = request.data
+            args.save()
+            serializer = AnglerAppContSerializer(args)
+            return Response(serializer.data, status=status.HTTP_200_OK)
+
         else:
             return Response({"error": "Object not found"}, status=status.HTTP_404_NOT_FOUND)
 
+    def delete(self, request, *args, **kwargs):
+        cont_id = request.data.get('app_container_id')
+
+        to_be_deleted = ApplicationContainers.objects.filter(app_container_id=cont_id)
+
+        if to_be_deleted:
+            to_be_deleted.delete()
+            return Response({"message": "Object deleted successfully."}, status=status.HTTP_200_OK)
+        else:
+            return Response({"message": "Object not found."}, status=status.HTTP_404_NOT_FOUND)
+
 class AnglerListAllContView(APIView):
     def get(self, request, *args, **kwargs):
-        apps = AllContainers.objects
-        serializer = AllContainersSerializer(apps, many=True)
-        return Response(serializer.data, status=status.HTTP_200_OK)
+        app_id_q = request.query_params.get('cont_id')
+
+        if app_id_q:
+            try:
+                container = AllContainers.objects.filter(container_id=app_id_q)
+                serializer = AllContainersSerializer(container, many=True)
+                return Response(serializer.data, status=status.HTTP_200_OK)
+            except AllContainers.DoesNotExist:
+                return Response({"message": "Application Container not found"}, status=status.HTTP_404_NOT_FOUND)
+        else:
+            apps = AllContainers.objects
+            serializer = AllContainersSerializer(apps, many=True)
+            return Response(serializer.data, status=status.HTTP_200_OK)
+
+    def post(self, request, *args, **kwargs):
+        serializer = AllContainersSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            run_add_new_container(request.data["container_name"], request.data["container_path"])
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 class LinkContainersView(APIView):
     def get(self, request, *args, **kwargs):
@@ -167,4 +207,9 @@ class RunAppView(APIView):
     def post(self, request, *args, **kwargs):
         x = request.data.get("app_id")
         run_app_func(x)
-        return Response({"message": "app_accepted"}, status=status.HTTP_200_OK)
+        return Response({"mes sage": "app_accepted"}, status=status.HTTP_200_OK)
+
+
+'''class ContainerArguments(APIView):
+
+    def get'''

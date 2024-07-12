@@ -7,14 +7,16 @@ interface MenuButtonProps {
 export const SideMenu: React.FC<MenuButtonProps> = ({ setShowModal}) => {
 
     return (
-        <div className="flex justify-start h-screen">
-            <div className="bg-side-menu_gray p-8 max-h-full">
-                <div className="bg-Angler-Dark_Blue w-full flex justify-center items-center">
-                    <p className="text-white">APPLOGO</p>
+        <div className="top-menu-container">
+            <div className="flex justify-between items-center bg-side-menu_gray p-4 w-full">
+                <div className="flex items-center gap-4"> {/* Flex container for logo and welcome text */}
+                    <div className="logo-container bg-Angler-Dark_Blue flex justify-center items-center h-12 w-48">
+                        <p className="text-white">APPLOGO</p>
+                    </div>
+                    <p className="text-Angler-Dark_Blue">Welcome to ANGLEr</p>
                 </div>
-                <p className="text-Angler-Dark_Blue">Welcome to ANGLEr</p>
-                <div className="flex flex-col gap-2">
-                    <MenuButton setShowModal={setShowModal} text={"New document"} />
+                <div className="menu-buttons flex gap-4">
+                    <MenuButton setShowModal={setShowModal} text={"New document"}/>
                     <MenuButton text={"Open document"}/>
                     <MenuButton text={"Recent files"}/>
                     <MenuButton text={"Tutorials document"}/>

@@ -1,6 +1,3 @@
 ta file je bil na hostu
-test dynamic
-app 66
-klik v appu
-
-dodali smo to besedilo in vrnili na host
+na faksu
+predstavitev 123456

@@ -22,12 +22,14 @@ class ApplicationContainers(models.Model):
     next_container = models.IntegerField(blank=True, null=True)
     position_x = models.IntegerField(blank=True, null=True)
     position_y = models.IntegerField(blank=True, null=True)
+    arguments = models.JSONField(blank=True, null=True)
 
 class AllContainers(models.Model):
     class Meta:
         app_label = 'angler_core'
-    container_id = models.AutoField(primary_key=True, unique=True)
+    container_id = models.AutoField(primary_key=True, unique=True,)
     container_name = models.CharField(max_length=100)
+    container_group = models.CharField(max_length=100, default="Core")
 
 class LinkContainers(models.Model):
     class Meta:

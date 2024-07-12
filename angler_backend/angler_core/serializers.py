@@ -9,7 +9,7 @@ class AnglerAppContSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = ApplicationContainers
-        fields = ["app_container_id", "container_id", "app_id", "prev_container", "next_container", "position"]
+        fields = ["app_container_id", "container_id", "app_id", "prev_container", "next_container", "position", "arguments"]
 
     def get_position(self, obj):
         return {"x": obj.position_x, "y": obj.position_y}
@@ -17,7 +17,7 @@ class AnglerAppContSerializer(serializers.ModelSerializer):
 class AllContainersSerializer(serializers.ModelSerializer):
     class Meta:
         model = AllContainers
-        fields = ["container_id", "container_name"]
+        fields = ["container_id", "container_name", "container_group"]
 
 class LinkContainersSerializer(serializers.ModelSerializer):
     class Meta:

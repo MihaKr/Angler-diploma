@@ -53,7 +53,7 @@ def build_images(list_cont):
     images = {}
     for i in list_cont:
         read_path = os.path.abspath(os.path.join("../../containers", i))
-        images[i] = client.images.build(path=read_path, tag=i)
+        images[i] = client.images.build(path=read_path, tag=i, buildargs=args)
 
     return images
 
@@ -85,7 +85,8 @@ def run_app_func():
     d = getContainerName(c)
     print(d)
 
-    e = build_images(d)
+    args = {}
+    e = build_images(d, args)
 
     print(e)
 

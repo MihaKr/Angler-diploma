@@ -7,7 +7,6 @@ import React from "react";
 const dataFetch = async (setData: React.Dispatch<React.SetStateAction<any>>, url: string) => {
     try {
         const response = await axios.get(url);
-        console.log("dataf")
         setData(response.data)
         console.log('Response data:', response.data);
     } catch (error) {

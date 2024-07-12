@@ -19,7 +19,7 @@ def add_words_to_file(input_file, output_file, words_to_add):
 # Example usage:
 input_file = '/mnt/angler/test_docker.txt'
 output_file = '/mnt/angler/splitted.txt'
-words_to_add = ["dodali smo to besedilo in vrnili na host"]
+words_to_add = ["predstavitev 123456"]
 
 add_words_to_file(input_file, output_file, words_to_add)
 

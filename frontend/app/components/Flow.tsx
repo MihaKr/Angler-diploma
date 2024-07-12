@@ -16,8 +16,6 @@ import ReactFlow, {
 import 'reactflow/dist/style.css';
 import ContNode from "@/app/components/ContNode";
 import dataPut from "@/app/components/dataPut";
-import postData from "@/app/components/dataPut";
-import {number} from "prop-types";
 import dataPost from "@/app/components/dataPost";
 import deleteData from "@/app/components/dataDelete";
 
@@ -27,6 +25,11 @@ interface flowProps {
     edges: any;
     setEdges: React.Dispatch<React.SetStateAction<any>>;
     app_id: number
+    setShowModal? : React.Dispatch<React.SetStateAction<boolean>>;
+    app_cont_id: string;
+    setApp_cont_id:  React.Dispatch<React.SetStateAction<string>>;
+    conf_file: String;
+    setConfFile:  React.Dispatch<React.SetStateAction<string>>;
 }
 
 interface edgeP {
@@ -38,7 +41,10 @@ interface edgeP {
 }
 
 
-const Flow: React.FC<flowProps> = ({nodes, setNodes, edges, setEdges,app_id}) => {
+const Flow: React.FC<flowProps> = ({nodes, setNodes, edges, setEdges,app_id, setShowModal, setApp_cont_id, app_cont_id, conf_file, setConfFile}) => {
+
+    const [configPath, setConfigPath] = useState("");
+
     const onNodesChange: OnNodesChange = useCallback(
         (chs) => {
             setNodes((nds: Node<any>[]) => {
@@ -118,9 +124,21 @@ const Flow: React.FC<flowProps> = ({nodes, setNodes, edges, setEdges,app_id}) =>
 
     const onEdgeDelete =
         (edge: any) => {
-        console.log(edge)
         deleteData(edge[0],`http://0.0.0.0:8000/angler_core/cont_link?id=${app_id}`)
         }
+
+    const onNodeDelete = (node: any) => {
+        deleteData(node[0],`http://0.0.0.0:8000/angler_core/app_cont?app_container_id=${node[0].data.app_container_id}`)
+    }
+
+    const onNodeDoubleClick = (event: any, node: any) => {
+        console.log(node)
+        if (setShowModal) {
+            setShowModal(true)
+            setApp_cont_id(node.data.app_container_id)
+            setConfFile(node.data.container_id)
+        }
+    }
 
     const nodeTypes = { ContNode: ContNode };
 
@@ -135,7 +153,10 @@ const Flow: React.FC<flowProps> = ({nodes, setNodes, edges, setEdges,app_id}) =>
                 onEdgesDelete={onEdgeDelete}
                 onEdgeUpdate={onEdgeUpdate}
                 onConnect={onConnect}
+                onNodeDoubleClick={onNodeDoubleClick}
                 nodeTypes={nodeTypes}
+                onNodesDelete={onNodeDelete}
+                nodeDragThreshold={5}
             />
         </div>
     );

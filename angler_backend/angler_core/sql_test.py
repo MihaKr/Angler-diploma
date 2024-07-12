@@ -50,6 +50,7 @@ def getContainerName(list_cont):
     return container_names
 
 def build_images(list_cont):
+
     images = {}
     for i in list_cont:
         read_path = os.path.abspath(os.path.join("../containers", i))

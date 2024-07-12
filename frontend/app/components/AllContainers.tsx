@@ -31,17 +31,43 @@ const AllContainers: FC<AllContainerProps>= ({ all_containers, drag_func }) => {
                     modifiers={[snapToGrid]}
 
         >
-        <div className="grid grid-cols-3 gap-10">
-            {all_containers.map((container: AllContainers, index: number) => (
-                <div key={container.container_id} className="mb-4">
-                    <ContainerButton container_id={container.container_id} container_name={container.container_name}
-                                     drag_func={drag_func}/>
-                </div>
-            ))}
+            <div className="flex flex-col w-full">
+                <div className="flex flex-col w-full">
+                    {all_containers.map((container: AllContainers, index: number) => (
+                        <div key={container.container_id} className="w-full p-4 flex">
+                            <ContainerButton container_id={container.container_id}
+                                             container_name={container.container_name}
+                                             drag_func={drag_func}/>
+                        </div>
+                    ))}
 
-        </div>
+                </div>
+            </div>
         </DndContext>
     );
 }
 
 export default AllContainers;
+
+/*
+*
+
+*         <DndContext onDragEnd={drag_func}
+                    modifiers={[snapToGrid]}
+
+        >
+            <div className="flex-col">
+                <div className="flex-col">
+                    {all_containers.map((container: AllContainers, index: number) => (
+                        <div key={container.container_id} className="w-full mb-10 p-4 flex">
+                            <ContainerButton container_id={container.container_id}
+                                             container_name={container.container_name}
+                                             drag_func={drag_func}/>
+                        </div>
+                    ))}
+
+                </div>
+            </div>
+        </DndContext>
+*
+* */
