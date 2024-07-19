@@ -46,41 +46,50 @@ export const CreateAppFormModal: React.FC<CreateAppFormModalProps> = ({ showModa
     }
 
     return (
-        <dialog open={showModal} className="modal">
-            <div id={"background-modal"} className={"fixed top-0 left-0 w-full h-full flex items-center justify-center bg-black bg-opacity-75"} onClick={handleClickBackground}>
-            <div id={"form-modal"} className={"rounded-lg bg-Angler-Text-Grey p-4 inline-block items-center justify-center bg"}>
-                <div className="block text-Angler-Dark_Blue font-bold text-center md:mb-0 pr-4 pb-4 pt-4">
-                    <h1>Create New App</h1>
-                </div>
-                <form className="w-full max-w-sm" onSubmit={onSubmit}>
-                    <div className="md:flex md:items-center mb-6">
-                        <div className="md:w-1/3">
-                            <label className="block text-gray-500 font-bold md:text-right mb-1 md:mb-0 pr-4">
-                                Application Title
-                            </label>
-                        </div>
-                        <div className="md:w-2/3">
-                            <input
-                                className="side-menu_gray appearance-none border-2 border-gray-200 rounded w-full py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:bg-white focus:border-purple-500"
-                                id="inline-full-name" type="text" value={appTitle} onChange={AppTyped}
-                            />
-                        </div>
+        <dialog open={showModal} className="modal z-50">
+            <div
+                id="background-modal"
+                className="fixed top-0 left-0 w-full h-full flex items-center justify-center bg-black bg-opacity-50"
+                onClick={handleClickBackground}
+            >
+                <div
+                    id="form-modal"
+                    className="bg-white p-6 rounded-lg shadow-md"
+                    onClick={(e) => e.stopPropagation()}
+                >
+                    <h1 className="text-center text-lg font-semibold text-gray-800 mb-4">
+                        Create New App
+                    </h1>
+                <form className="space-y-4" onSubmit={onSubmit}>
+                    <div>
+                        <label
+                            htmlFor="container-name"
+                            className="block text-sm font-medium text-gray-700"
+                        >
+                            App Name
+                        </label>
+                        <input
+                            id="container-name"
+                            type="text"
+                            value={appTitle}
+                            onChange={AppTyped}
+                            className="mt-1 block w-full border border-gray-300 rounded-md p-2 focus:ring focus:ring-blue-500"
+                        />
                     </div>
-                    <div className="md:flex md:items-center">
-                        <div className="md:w-1/3"></div>
-                        <div className="md:w-2/3">
-                            <button
-                                className="shadow bg-Angler-Dark_Blue hover:bg-purple-400 focus:shadow-outline focus:outline-none text-white font-bold py-2 px-4 rounded"
-                                type="submit">
-                                Create App
-                            </button>
-                        </div>
+                    <div>
+                        <button
+                            type="submit"
+                            className="w-full bg-blue-500 text-white py-2 rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-700"
+                        >
+                            Create App
+                        </button>
                     </div>
                 </form>
             </div>
-            </div>
-        </dialog>
-    );
+        </div>
+    </dialog>
+    )
+        ;
 };
 
 export default CreateAppFormModal;

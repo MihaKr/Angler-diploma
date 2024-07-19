@@ -12,6 +12,11 @@ import createGroupDict from "@/app/helpers/toGroups";
 import ContainerButton from "@/app/components/ContainerButton";
 import AddNewContainerModal from "@/app/components/AddNewContainerModal";
 import TsContent from "@/app/components/tsContent";
+import {number} from "prop-types";
+import allContainers from "@/app/components/AllContainers";
+import dataFetch from "@/app/components/dataFetch";
+import Status from "@/app/components/Status";
+import WebSocketComponent from "@/app/components/WebSocketComponent";
 
 // pages/index.tsx
 
@@ -19,8 +24,6 @@ interface AllContainersI {
     app_container_id: number;
     container_id: number;
     app_id: number;
-    prev_container: number;
-    next_container: number;
     position: { x: number, y: number }
 }
 
@@ -49,6 +52,8 @@ export default function Page({ params }: { params: { app_id: number} }) {
     const [contArgs, setcontArgs] = useState<ArgObj>({});
     const [app_cont_id, setApp_cont_id] = useState('');
     const [contConfigId, setContConfigId] = useState('');
+    const [successMessage, setSuccessMessage] = useState<any>('');
+    const [check, setCheck] = useState<any>('');
 
     const handleClickAllContainers = async (e: DragEndEvent) => {
         if(activeContainers.length > 0) {
@@ -57,8 +62,6 @@ export default function Page({ params }: { params: { app_id: number} }) {
                 "app_container_id": 0, //max current +1,
                 "container_id": +e.active.id,//e id,
                 "app_id": +params.app_id, //convert to num
-                "prev_container": null,
-                "next_container": null,
                 "position": { "x": +e.delta.x, "y": +e.delta.y }
             }
             const r = await postData(new_cont, 'http://0.0.0.0:8000/angler_core/app_cont')
@@ -75,8 +78,6 @@ export default function Page({ params }: { params: { app_id: number} }) {
                 "app_container_id": 0,
                 "container_id": +e.active.id,//e id,
                 "app_id": +params.app_id, //convert to num
-                "prev_container": null,
-                "next_container": null,
                 "position": { "x": +e.delta.x, "y": +e.delta.y }
             }
 
@@ -99,6 +100,33 @@ export default function Page({ params }: { params: { app_id: number} }) {
         return max
     }
 
+    const updateContainers = (newContainers: any[]) => {
+        setAllContainers(newContainers);
+    };
+
+    useEffect(() => {
+        const updateActiveContainers = () => {
+            const updatedActiveContainers = activeContainers.map((data: allContainers) => {
+                const matchingContainer = allContainers.find((container: Container) =>
+                    Number(container.container_id) === Number(data.container_id)
+                );
+                if (matchingContainer) {
+                    return {
+                        ...data,
+                        container_name: `${matchingContainer.container_name}` // Example mapping function
+                    };
+                }
+                console.log("data")
+                console.log(data)
+                return data;
+            });
+            setActiveContainers(updatedActiveContainers);
+        };
+        updateActiveContainers();
+        console.log(activeContainers)
+    }, [allContainers]);
+
+
     let groups = createGroupDict(allContainers)
 
 
@@ -107,56 +135,101 @@ export default function Page({ params }: { params: { app_id: number} }) {
     //TODO v backendu endpoint za vse containers
 
     return (
-        <div className="min-h-screen relative">
-            <AddNewContainerModal showModal={showModalNewContainer} setShowModal={setShowModalNewContainer}/>
-
-            <div>
+        <div className="flex flex-col h-screen overflow-hidden">
+            <AddNewContainerModal
+                showModal={showModalNewContainer}
+                setShowModal={setShowModalNewContainer}
+                allContainers={allContainers}
+                setAllContainers={setAllContainers}
+                setSuccessMessage={setSuccessMessage}
+                successMessage={setSuccessMessage}
+            />
+            <div className="max-w">
                 <SideMenu setShowModal={setShowModal}/>
             </div>
-            <div className="w-full h-full">
-                <DataFetcher url={`http://0.0.0.0:8000/angler_core/app_cont?id=${params.app_id}`}
-                             setData={setActiveContainers}/>
-                <DataFetcher url={`http://0.0.0.0:8000/angler_core/cont_link?id=${params.app_id}`}
-                             setData={setEdges}/>
+            <div>
+                <DataFetcher
+                    url={`http://0.0.0.0:8000/angler_core/app_cont?id=${params.app_id}`}
+                    setData={setActiveContainers}
+                />
+                <DataFetcher
+                    url={`http://0.0.0.0:8000/angler_core/cont_link?id=${params.app_id}`}
+                    setData={setEdges}
+                />
                 <DataFetcher url={`http://0.0.0.0:8000/angler_core/all_cont`} setData={setAllContainers}/>
-
             </div>
-            <div className="grid grid-cols-5 min-h-screen">
-                <div className="bg-white shadow-md rounded-lg p-4">
+            <div className="grid grid-cols-5 flex-1 overflow-hidden">
+                <div className="bg-white shadow-md rounded-lg p-4 w-full">
                     {groups.map((container: GroupedContainers, index: number) => (
-                        <div key={container.key} className="">
-                            <DropDown group_name={container.key} allContainers={container.items}
-                                      setAllContainers={setAllContainers}
-                                      handleClickAllContainers={handleClickAllContainers}/>
+                        <div key={container.key} className="p-2">
+                            <DropDown
+                                group_name={container.key}
+                                allContainers={container.items}
+                                setAllContainers={setAllContainers}
+                                handleClickAllContainers={handleClickAllContainers}
+                            />
                         </div>
                     ))}
-                    <div>
-                        <a href="#" type="button" onClick={() => setShowModalNewContainer(true)}
-                           className={"content-end inline-flex justify-between .flex-1 "}>
-                            <div className={`flex items-center justify-center`}>
-                                <p className={"hover:text-Angler-Dark_Blue text-Angler-Text-Grey flex items-center justify-center"}>
-                                    {"Add New Container"}
-                                </p>
+                    <div className="mt-8">
+                        <a
+                            href="#"
+                            type="button"
+                            onClick={() => setShowModalNewContainer(true)}
+                            className="flex z-20"
+                        >
+                            <div
+                                className={`flex items-center justify-center w-full bg-blue-500 text-white py-2 rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-700 z-50`}
+                            >
+                                <p>{"Add New Container"}</p>
                             </div>
                         </a>
                     </div>
                 </div>
                 <div className="col-span-3">
-                    <NewDisplayPipeline data={activeContainers} updateData={setActiveContainers} edge_data={edges}
-                                        update_edge={setEdges} app_id={params.app_id} setShowModal={setshowConfigMenuModal}
-                                        setConfFile={setContConfigId} setApp_cont_id={setApp_cont_id} app_cont_id={app_cont_id} conf_file={contConfigId}/>
+                    <NewDisplayPipeline
+                        data={activeContainers}
+                        updateData={setActiveContainers}
+                        edge_data={edges}
+                        update_edge={setEdges}
+                        app_id={params.app_id}
+                        setShowModal={setshowConfigMenuModal}
+                        setConfFile={setContConfigId}
+                        setApp_cont_id={setApp_cont_id}
+                        app_cont_id={app_cont_id}
+                        conf_file={contConfigId}
+                        allCont={allContainers}
+                    />
                 </div>
-                <div className="z-40">
-                    <TsContent showModal={showConfigMenuModal} setShowModal={setshowConfigMenuModal} contArgs={contArgs} setcontArgs={setcontArgs}
-                               app_cont_id={app_cont_id} setApp_cont_id={setApp_cont_id} setConfFile={setContConfigId} conf_file={contConfigId}/>
-                    <div>
-                        <RunAppButton app_id={params.app_id}/>
+                <div className="z-40 h-min w-min inline-block p-4">
+                    <TsContent
+                        showModal={showConfigMenuModal}
+                        setShowModal={setshowConfigMenuModal}
+                        contArgs={contArgs}
+                        setcontArgs={setcontArgs}
+                        app_cont_id={app_cont_id}
+                        setApp_cont_id={setApp_cont_id}
+                        setConfFile={setContConfigId}
+                        conf_file={contConfigId}
+                    />
+                    <div className="z-30 inline-block w-[90%] whitespace-nowrap">
+                        <RunAppButton
+                            app_id={params.app_id}
+                            successMessage={successMessage}
+                            setSuccessMessage={setSuccessMessage}
+                        />
                     </div>
+                    {successMessage !== '' && (
+                        <div className="mt-4 text-green-600 text-center">{successMessage}</div>
+                    )}
                 </div>
-
             </div>
+            <div className="fixed inset-x-0 bottom-0 min-h-[20%] max-h-[20%] overflow-y-auto rounded-2xl p-4">
+                <div>Debug Log</div>
+                <WebSocketComponent check={successMessage}/>
+            </div>
+        </div>
 
-        </div>)
+    )
 }
 
 /*

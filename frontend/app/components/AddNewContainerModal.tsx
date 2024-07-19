@@ -1,9 +1,21 @@
 import React, {FC, FormEvent, MouseEventHandler, useState} from 'react';
 import postData from "@/app/components/dataPost";
+import {router} from "next/client";
+import dataFetch from "@/app/components/dataFetch";
+declare module "react" {
+    interface InputHTMLAttributes<T> extends HTMLAttributes<T> {
+        webkitdirectory?: string;
+    }
+}
 
 interface AddNewContainerModalProps {
     showModal: boolean;
     setShowModal? : React.Dispatch<React.SetStateAction<boolean>>;
+    allContainers: []
+    setAllContainers: React.Dispatch<React.SetStateAction<any[]>>;
+    successMessage: any;
+    setSuccessMessage: React.Dispatch<React.SetStateAction<String>>;
+
 }
 
 type MyData = {
@@ -12,11 +24,18 @@ type MyData = {
     container_path: string;
 };
 
-export const AddNewContainerModal: React.FC<AddNewContainerModalProps> = ({ showModal, setShowModal }) => {
+export const AddNewContainerModal: React.FC<AddNewContainerModalProps> = ({ showModal, setShowModal, allContainers, setAllContainers, successMessage, setSuccessMessage}) => {
     const [containerName, setContainerName] = useState("");
     const [containerGroup, SetContainerGroup] = useState("");
     const [containerPath, setContainerPath] = useState("");
+    const [containerFolder, setContainerFolder] = useState<FileList | null>(null);
 
+
+    function handleFileChange(e: React.ChangeEvent<HTMLInputElement>) {
+        if (e.target.files) {
+            setContainerFolder(e.target.files);
+        }
+    }
 
     const handleClickBackground: React.MouseEventHandler<HTMLDivElement> = (event) => {
         if((event.target as HTMLDivElement).id == 'background-modal') {
@@ -29,21 +48,45 @@ export const AddNewContainerModal: React.FC<AddNewContainerModalProps> = ({ show
     async function onSubmit(event: FormEvent<HTMLFormElement>) {
         event.preventDefault();
 
-        //const formData = new FormData(event.currentTarget);
-
-        //console.log(formData)
-
         const data: MyData = {
             container_name: containerName,
             container_group: containerGroup,
             container_path: containerPath
-
         };
-        postData(data,'http://127.0.0.1:8000/angler_core/all_cont')
 
-        // @ts-ignore
-        setShowModal(false); // Close the dialog when the form is submitted
+        try {
+            await postData(data, 'http://127.0.0.1:8000/angler_core/all_cont');
+
+            if (containerFolder) {
+                for (let i = 0; i < containerFolder.length; i++) {
+                    const formData = new FormData();
+                    formData.append('file', containerFolder[i]);
+                    formData.append('name', containerName);
+
+                    console.log('Uploading file:', containerFolder[i].name);
+
+                    await postData(formData, 'http://127.0.0.1:8000/angler_core/files');
+                }
+            }
+
+            setAllContainers(prevState => [
+                ...prevState,
+                {
+                    container_name: containerName,
+                    container_group: containerGroup
+                }
+            ]);
+
+            if (setShowModal) {
+                setShowModal(false);
+            }
+            setSuccessMessage('Container added successfully!');
+            setTimeout(() => setSuccessMessage(''), 3000); // Clear message after 3 seconds
+        } catch (error) {
+            console.error('Error uploading files:', error);
+        }
     }
+
 
     function AppTyped(e: React.ChangeEvent<HTMLInputElement>) {
         setContainerName(e.target.value);
@@ -57,62 +100,75 @@ export const AddNewContainerModal: React.FC<AddNewContainerModalProps> = ({ show
         setContainerPath(e.target.value);
     }
 
+
     return (
         <dialog open={showModal} className="modal z-50">
-            <div id={"background-modal"} className={"fixed top-0 left-0 w-full h-full flex items-center justify-center bg-black bg-opacity-75"} onClick={handleClickBackground}>
-                <div id={"form-modal"} className={"rounded-lg bg-Angler-Text-Grey p-4 inline-block items-center justify-center bg"}>
-                    <div className="block text-Angler-Dark_Blue font-bold text-center md:mb-0 pr-4 pb-4 pt-4">
-                        <h1>Create New App</h1>
-                    </div>
-                    <form className="w-full max-w-sm" onSubmit={onSubmit}>
-                        <div className="md:flex md:items-center mb-6">
-                            <div className="md:w-1/3">
-                                <label className="block text-gray-500 font-bold md:text-right mb-1 md:mb-0 pr-4">
-                                    Container Name
-                                </label>
-                            </div>
-                            <div className="md:w-2/3">
-                                <input
-                                    className="side-menu_gray appearance-none border-2 border-gray-200 rounded w-full py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:bg-white focus:border-purple-500"
-                                    id="inline-full-name" type="text" value={containerName} onChange={AppTyped}
-                                />
-                            </div>
+            <div
+                id="background-modal"
+                className="fixed top-0 left-0 w-full h-full flex items-center justify-center bg-black bg-opacity-50"
+                onClick={handleClickBackground}
+            >
+                <div
+                    id="form-modal"
+                    className="bg-white p-6 rounded-lg shadow-md"
+                    onClick={(e) => e.stopPropagation()}
+                >
+                    <h1 className="text-center text-lg font-semibold text-gray-800 mb-4">
+                        Add New Container
+                    </h1>
+                    <form className="space-y-4" onSubmit={onSubmit}>
+                        <div>
+                            <label
+                                htmlFor="container-name"
+                                className="block text-sm font-medium text-gray-700"
+                            >
+                                Container Name
+                            </label>
+                            <input
+                                id="container-name"
+                                type="text"
+                                value={containerName}
+                                onChange={AppTyped}
+                                className="mt-1 block w-full border border-gray-300 rounded-md p-2 focus:ring focus:ring-blue-500"
+                            />
                         </div>
-                        <div className="md:flex md:items-center mb-6">
-                            <div className="md:w-1/3">
-                                <label className="block text-gray-500 font-bold md:text-right mb-1 md:mb-0 pr-4">
-                                    Container Group
-                                </label>
-                            </div>
-                            <div className="md:w-2/3">
-                                <input
-                                    className="side-menu_gray appearance-none border-2 border-gray-200 rounded w-full py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:bg-white focus:border-purple-500"
-                                    id="inline-full-name" type="text" value={containerGroup} onChange={groupType}
-                                />
-                            </div>
+                        <div>
+                            <label
+                                htmlFor="container-group"
+                                className="block text-sm font-medium text-gray-700"
+                            >
+                                Container Group
+                            </label>
+                            <input
+                                id="container-group"
+                                type="text"
+                                value={containerGroup}
+                                onChange={groupType}
+                                className="mt-1 block w-full border border-gray-300 rounded-md p-2 focus:ring focus:ring-blue-500"
+                            />
                         </div>
-                        <div className="md:flex md:items-center mb-6">
-                            <div className="md:w-1/3">
-                                <label className="block text-gray-500 font-bold md:text-right mb-1 md:mb-0 pr-4">
-                                    Container Path
-                                </label>
-                            </div>
-                            <div className="md:w-2/3">
-                                <input
-                                    className="side-menu_gray appearance-none border-2 border-gray-200 rounded w-full py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:bg-white focus:border-purple-500"
-                                    id="inline-full-name" type="text" value={containerPath} onChange={pathType}
-                                />
-                            </div>
+                        <div>
+                            <label
+                                htmlFor="container-path"
+                                className="block text-sm font-medium text-gray-700"
+                            >
+                                Container Path
+                            </label>
+                            <input
+                                id="container-path"
+                                type="file"
+                                webkitdirectory="true"
+                                onChange={handleFileChange}
+                                className="mt-1 block w-full border border-gray-300 rounded-md p-2 focus:ring focus:ring-blue-500"
+                            />
                         </div>
-                        <div className="md:flex md:items-center">
-                            <div className="md:w-1/3"></div>
-                            <div className="md:w-2/3">
-                                <button
-                                    className="shadow bg-Angler-Dark_Blue hover:bg-purple-400 focus:shadow-outline focus:outline-none text-white font-bold py-2 px-4 rounded"
-                                    type="submit">
-                                    Create App
-                                </button>
-                            </div>
+                        <div>
+                            <button
+                                type="submit"
+                                className="w-full bg-blue-500 text-white py-2 rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-700"
+                            >
+                                Add Container
+                            </button>
                         </div>
                     </form>
                 </div>

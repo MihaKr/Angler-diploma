@@ -1,13 +1,22 @@
 FROM alpine:latest
 
-# Set the working directory inside the container
 WORKDIR /app
 
-# Copy your bash script to the container
+# Define build-time argument
+ARG FILEPATH
+
+# Set environment variable
+ENV FILEPATH_ENV=${FILEPATH}
+
+# Debug echo for build-time (this won't work as expected here, better for runtime)
+# RUN echo $FILEPATH_ENV
+
 COPY copy_docker_host.sh /app/
 
-# Make the script executable
 RUN chmod +x /app/copy_docker_host.sh
 
-# Set the entry point to execute the script with bash
-ENTRYPOINT ["/bin/sh", "/app/copy_docker_host.sh"]
+# Adjust ENTRYPOINT to use the environment variable
+
+ENTRYPOINT /bin/sh /app/copy_docker_host.sh $FILEPATH_ENV
+
+#CMD ["tail", "-f", "/dev/null"]

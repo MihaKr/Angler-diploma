@@ -28,8 +28,8 @@ export const DropDown: React.FC<DropDownProps> = ({ allContainers, setAllContain
     };
 
     return (
-        <div className={"flex-col justify-between items-center"}>
-            <div className={"inline-flex items-center justify-center"}>
+        <div className={"flex-grow justify-between"}>
+            <div className={"inline-flex items-center justify-center w-full"}>
                 <a href="#" onClick={toggleExpand} className={"content-end items-center inline-flex justify-between .flex-1"}>
                     <p className={`text-dark-purple p-5 hover:text-Angler-Dark_Blue hover:cursor-pointer`}>{group_name}</p>
                     {isExpanded ?

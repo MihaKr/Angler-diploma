@@ -22,15 +22,18 @@ interface TsContentProps {
     setApp_cont_id:  React.Dispatch<React.SetStateAction<string>>;
     conf_file: string;
     setConfFile:  React.Dispatch<React.SetStateAction<string>>;
+
 }
 
 interface DynamicComponentProps {
     contArgs: object
     setcontArgs: React.Dispatch<React.SetStateAction<ArgObj>>
     app_cont_id: string
+    setShowModal? : React.Dispatch<React.SetStateAction<boolean>>;
+
 }
 
-export const TsContent: React.FC<TsContentProps> = ({ setShowModal, showModal, contArgs, setcontArgs,setConfFile, conf_file, setApp_cont_id, app_cont_id}) => {
+export const TsContent: React.FC<TsContentProps> = ({ setShowModal, showModal, contArgs, setcontArgs,setConfFile, conf_file, setApp_cont_id, app_cont_id, s}) => {
     const [PageComponent, setPageComponent] = useState<React.ComponentType<DynamicComponentProps> | null>(null);
     const [contName, setContName] = useState<any> (null)
 
@@ -80,17 +83,19 @@ export const TsContent: React.FC<TsContentProps> = ({ setShowModal, showModal, c
             {showModal && (
                 <div
                     id="background-modal"
-                    className="fixed top-0 left-0 w-full h-full flex items-center justify-center bg-black bg-opacity-75"
+                    className="fixed top-0 left-0 w-full h-full flex items-center justify-center bg-black bg-opacity-50"
                     onClick={handleClickBackground}
                 >
                     <div
                         id="form-modal"
-                        className="rounded-lg bg-Angler-Text-Grey p-4 inline-block items-center justify-center"
+                        className="bg-white p-6 rounded-lg shadow-md"
+                        onClick={(e) => e.stopPropagation()}
                     >
                         <div>
                             {PageComponent && (
                                 <Suspense fallback={<div>Loading...</div>}>
-                                    <PageComponent  contArgs={contArgs} setcontArgs={setcontArgs} app_cont_id={app_cont_id}
+                                    <PageComponent contArgs={contArgs} setcontArgs={setcontArgs}
+                                                   app_cont_id={app_cont_id} setShowModal={setShowModal}
                                     />
                                 </Suspense>
                             )}
@@ -103,7 +108,6 @@ export const TsContent: React.FC<TsContentProps> = ({ setShowModal, showModal, c
 };
 
 export default TsContent;
-
 
 
 /*

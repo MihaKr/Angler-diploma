@@ -175,3 +175,12 @@ jspm_packages
 # Optional REPL history
 .node_repl_history
 .next
+*.pt
+/containers/stanza_sentiment/stanza_resources
+/containers/stanza_ner/stanza_resources
+/containers/stanza_mwt/stanza_resources
+/containers/stanza_depparse/stanza_resources
+/containers/stanza_tokenize/stanza_resources
+/containers/stanza_pos/stanza_resources
+/containers/stanza_lemma/stanza_resources
+/containers/stanza_ constituency/stanza_resources

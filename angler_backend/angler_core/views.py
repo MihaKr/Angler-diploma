@@ -1,12 +1,18 @@
-from django.shortcuts import render
+import os
+import shutil
+from datetime import datetime
+
+from django.core.files.storage import default_storage
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
-from rest_framework import permissions
+import datetime
+from django.conf import settings
+from django.utils.timezone import make_aware
 
-from docker_manager.add_new_container import run_add_new_container
 from .models import Applications, ApplicationContainers, AllContainers, LinkContainers
-from .serializers import AnglerSerializer, AnglerAppContSerializer, AllContainersSerializer, LinkContainersSerializer, RunAppSerializer
+from .serializers import AnglerSerializer, AnglerAppContSerializer, AllContainersSerializer, LinkContainersSerializer, \
+    FileSerializer
 
 from .sql_test import run_app_func
 
@@ -35,6 +41,25 @@ class AnglerListApiView(APIView):
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
+    def put(self, request, *args, **kwargs):
+        app_id_q = request.query_params.get('id')
+
+        app = Applications.objects.get(app_id=app_id_q)
+
+        if app:
+            if request.data['new_date'] is not None:
+                settings.TIME_ZONE  # 'UTC'
+                format_string = '%Y-%m-%d %H:%M:%S'
+
+
+                naive_datetime = datetime.datetime.strptime(request.data.get('new_date'), format_string)
+
+                new_date = make_aware(naive_datetime)
+                app.app_date_last_Modified = new_date
+                app.save()
+
+                serializer = AnglerSerializer(app)
+                return Response(serializer.data, status=status.HTTP_200_OK)
     def delete(self, request, *args, **kwargs):
         app_id_q = request.query_params.get('id')
 
@@ -89,8 +114,11 @@ class AnglerListAppContView(APIView):
             else:
                 print("none")
         elif args:
-            print(request.data)
-            print(args)
+            if request.data['FILEPATH'] :
+                try:
+                    shutil.copyfile(request.data['FILEPATH'], '../docker_host/into_text.txt')
+                except Exception as e:
+                    print(f"Error occurred while copying and renaming file: {e}")
             args.arguments = request.data
             args.save()
             serializer = AnglerAppContSerializer(args)
@@ -130,7 +158,6 @@ class AnglerListAllContView(APIView):
         serializer = AllContainersSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
-            run_add_new_container(request.data["container_name"], request.data["container_path"])
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
@@ -140,7 +167,7 @@ class LinkContainersView(APIView):
 
         if app_id_q:
             try:
-                links = LinkContainers.objects.filter(app_id_link=app_id_q)
+                links = LinkContainers.objects.filter(app_id=app_id_q)
                 serializer = LinkContainersSerializer(links, many=True)
                 return Response(serializer.data, status=status.HTTP_200_OK)
             except ApplicationContainers.DoesNotExist:
@@ -206,8 +233,43 @@ class LinkContainersView(APIView):
 class RunAppView(APIView):
     def post(self, request, *args, **kwargs):
         x = request.data.get("app_id")
-        run_app_func(x)
-        return Response({"mes sage": "app_accepted"}, status=status.HTTP_200_OK)
+        args = {}
+        run_app_func(x,args)
+        return Response({"message": "app_accepted"}, status=status.HTTP_200_OK)
+
+class FileView(APIView):
+    def post(self, request, *args, **kwargs):
+        serializer = FileSerializer(data=request.data)
+        if serializer.is_valid() or request.FILES['file'].content_type == 'text/x-python-script':
+            if 'app_container_id' in request.data:
+                file_instance = serializer.save()
+                source_path = file_instance.file.path
+                shutil.copy(source_path, '../docker_host/into_text.txt')
+                return Response(serializer.data, status=status.HTTP_201_CREATED)
+            else:
+                file = request.FILES.get('file')
+                name = request.data.get('name')
+
+                if not file or not name:
+                    return Response({'error': 'File or name is missing'}, status=status.HTTP_400_BAD_REQUEST)
+
+                path = os.path.join('../containers', name)
+                if not os.path.exists(path):
+                    os.makedirs(path)
+
+                if file.name == 'config.tsx':
+                    destination_path = os.path.join('../frontend/app/configs/', f'{name}.tsx')
+                else:
+                    destination_path = os.path.join(path, file.name)
+
+                with open(destination_path, 'wb+') as destination:
+                    for chunk in file.chunks():
+                        destination.write(chunk)
+
+                return Response({'message': 'File uploaded successfully'}, status=status.HTTP_201_CREATED)
+
+        print(serializer.errors)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
 '''class ContainerArguments(APIView):

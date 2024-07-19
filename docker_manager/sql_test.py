@@ -75,7 +75,7 @@ def run_containers(list_img):
 def delete_cont(list_cont):
     client.containers.prune(list_cont)
 
-def run_app_func():
+def run_app_func(args):
     a,b = getLinks(8)
     print(a)
     print(b)
@@ -85,7 +85,6 @@ def run_app_func():
     d = getContainerName(c)
     print(d)
 
-    args = {}
     e = build_images(d, args)
 
     print(e)

@@ -13,7 +13,7 @@ interface ContainerButtonProps {
 const ContainerButton: FC<ContainerButtonProps>= ({ container_id,container_name, drag_func }) => {
     //props.top != 0 ? `absolute left-${props.left}px top-${props.top}0x` : "justify-center"                 className={`left-[${props.top}px] top-[${props.top}px]`}
     return (
-        <div className={"w-full px-2 py-2"}>
+        <div className={" px-2 py-2 "}>
             <DraggableComponent tmp_key={String(container_id)}>
                 {container_name}
             </DraggableComponent>

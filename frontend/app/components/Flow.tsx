@@ -18,6 +18,7 @@ import ContNode from "@/app/components/ContNode";
 import dataPut from "@/app/components/dataPut";
 import dataPost from "@/app/components/dataPost";
 import deleteData from "@/app/components/dataDelete";
+import {router} from "next/client";
 
 interface flowProps {
     nodes: any;
@@ -40,7 +41,6 @@ interface edgeP {
     destination_edge: string
 }
 
-
 const Flow: React.FC<flowProps> = ({nodes, setNodes, edges, setEdges,app_id, setShowModal, setApp_cont_id, app_cont_id, conf_file, setConfFile}) => {
 
     const [configPath, setConfigPath] = useState("");
@@ -50,6 +50,12 @@ const Flow: React.FC<flowProps> = ({nodes, setNodes, edges, setEdges,app_id, set
             setNodes((nds: Node<any>[]) => {
                 return applyNodeChanges(chs, nds);
             });
+
+            let x = {
+                new_date: new Date().toISOString().slice(0, 19).replace('T', ' ')
+            }
+
+            dataPut(x, `http://127.0.0.1:8000/angler_core/api?id=${app_id}`)
         },
         [setNodes]
     );
@@ -64,7 +70,7 @@ const Flow: React.FC<flowProps> = ({nodes, setNodes, edges, setEdges,app_id, set
     const onConnect: OnConnect = useCallback(
         (params) => {
             let f : edgeP = {
-                app_id_link: app_id,
+                app_id: app_id,
                 // @ts-ignore
                 origin: +params.source.replace('node-',''),
                 // @ts-ignore
@@ -87,6 +93,7 @@ const Flow: React.FC<flowProps> = ({nodes, setNodes, edges, setEdges,app_id, set
 
 
     const onNodeDragStop = (event: any, node: any) => {
+        console.log(node)
 
         node.data.position.x = Math.round(node.position.x);
         node.data.position.y = Math.round(node.position.y);
@@ -122,17 +129,20 @@ const Flow: React.FC<flowProps> = ({nodes, setNodes, edges, setEdges,app_id, set
         []
     );
 
-    const onEdgeDelete =
-        (edge: any) => {
+    const onEdgeDelete = useCallback((edge: any) => {
         deleteData(edge[0],`http://0.0.0.0:8000/angler_core/cont_link?id=${app_id}`)
-        }
+        setEdges((prevEdge: any[]) => prevEdge.filter((prevNode: any) => prevEdge.id !== edge[0].id));
+    }, [edges]);
 
-    const onNodeDelete = (node: any) => {
+    const onNodeDelete = useCallback((node: any) => {
+        console.log("nods")
+        console.log(nodes)
         deleteData(node[0],`http://0.0.0.0:8000/angler_core/app_cont?app_container_id=${node[0].data.app_container_id}`)
-    }
+        setNodes((prevNodes: any[]) => prevNodes.filter((prevNode: any) => prevNode !== node[0]));
+        console.log(nodes)
+    }, [nodes]);
 
     const onNodeDoubleClick = (event: any, node: any) => {
-        console.log(node)
         if (setShowModal) {
             setShowModal(true)
             setApp_cont_id(node.data.app_container_id)

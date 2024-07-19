@@ -17,6 +17,7 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 from angler_core import urls as angler_core_urls
+from angler_core import routing as routing
 
 urlpatterns = [
     path('admin/', admin.site.urls),

@@ -8,8 +8,6 @@ interface AllContainersI {
     app_container_id: number;
     container_id: number;
     app_id: number;
-    prev_container: number;
-    next_container: number;
     position: { x: number, y: number }
 }
 
@@ -33,6 +31,7 @@ interface DisplayPipelineProps {
     setApp_cont_id:  React.Dispatch<React.SetStateAction<string>>;
     conf_file: String;
     setConfFile:  React.Dispatch<React.SetStateAction<string>>;
+    allCont: []
 }
 
 const nodeSize = {
@@ -40,11 +39,20 @@ const nodeSize = {
     height: 40,
 };
 
+interface Container {
+    container_id: string
+    container_name: string
+    container_group: any
+}
 
-const DisplayPipeline: React.FC<DisplayPipelineProps> = ({ data, updateData, edge_data, update_edge, app_id, setShowModal, app_cont_id, setApp_cont_id, conf_file, setConfFile }) => {
+
+const DisplayPipeline: React.FC<DisplayPipelineProps> = ({ data, updateData, edge_data, update_edge, app_id, setShowModal, app_cont_id, setApp_cont_id, conf_file, setConfFile, allCont }) => {
     const [nodes, setNodes] = useState<Node[]>([]);
     const [edges, setEdges] = useState<Edge[]>([]);
     const [loading, setLoading] = useState(true);
+
+    console.log(data)
+
 
     useEffect(() => {
         setNodes(
@@ -86,7 +94,6 @@ const DisplayPipeline: React.FC<DisplayPipelineProps> = ({ data, updateData, edg
                     initialNodes={nodes} initialEdges={edges}>
                     <Flow nodes={nodes} edges={edges} setNodes={setNodes} setEdges={setEdges} app_id={app_id} setShowModal={setShowModal}
                     setApp_cont_id={setApp_cont_id} app_cont_id={app_cont_id} setConfFile={setConfFile} conf_file={conf_file}/>
-                    <MiniMap />
                 </ReactFlowProvider>
             </div>
     );

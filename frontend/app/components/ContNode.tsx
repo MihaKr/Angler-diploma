@@ -7,18 +7,15 @@ interface AllContainersI {
     container_name: string
     container_id: number;
     app_id: number;
-    prev_container: number;
-    next_container: number;
     position: { x: number, y: number }
 }
 
 const ContNode = ({ data }: { data: AllContainersI }) => {
+    console.log(data)
     return (
         <div style={{border: '1px solid #888', padding: 10, borderRadius: 10, background: '#fff', minWidth: 150}}>
             <div>{`App Container ID: ${data.app_container_id}`}</div>
             <div>{`Container Name: ${data.container_name}`}</div>
-            <div>{`Container ID: ${data.container_id}`}</div>
-            <div>{`App ID: ${data.app_id}`}</div>
             <div>{`Position X: ${data.position.x}`}</div>
             <div>{`Position Y: ${data.position.y}`}</div>
             <Handle type="target" id="a" position={Position.Left} style={{background: '#555', height: 16, width: 16}}/>

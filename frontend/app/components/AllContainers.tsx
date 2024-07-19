@@ -31,10 +31,10 @@ const AllContainers: FC<AllContainerProps>= ({ all_containers, drag_func }) => {
                     modifiers={[snapToGrid]}
 
         >
-            <div className="flex flex-col w-full">
-                <div className="flex flex-col w-full">
+            <div className="flex flex-col items-start">
+                <div className="flex flex-col items-start">
                     {all_containers.map((container: AllContainers, index: number) => (
-                        <div key={container.container_id} className="w-full p-4 flex">
+                        <div key={container.container_id} className="p-4 flex justify-start">
                             <ContainerButton container_id={container.container_id}
                                              container_name={container.container_name}
                                              drag_func={drag_func}/>

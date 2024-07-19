@@ -1,0 +1,1 @@
+Testiranje procesorja tokeniza v aplikaciji
