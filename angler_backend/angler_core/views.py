@@ -55,7 +55,7 @@ class AnglerListApiView(APIView):
                 naive_datetime = datetime.datetime.strptime(request.data.get('new_date'), format_string)
 
                 new_date = make_aware(naive_datetime)
-                app.app_date_last_Modified = new_date
+                app.app_date_last_modified = new_date
                 app.save()
 
                 serializer = AnglerSerializer(app)

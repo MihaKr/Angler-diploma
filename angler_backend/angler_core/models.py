@@ -10,7 +10,7 @@ class Applications(models.Model):
     app_name = models.CharField(max_length=30)
     owner = models.CharField(max_length=30)
     date_created = models.DateTimeField(auto_now_add=True, null=True, blank=True)
-    app_date_last_Modified = models.DateTimeField(auto_now_add=True, null=True, blank=True)
+    app_date_last_modified = models.DateTimeField(auto_now_add=True, null=True, blank=True)
 
 class ApplicationContainers(models.Model):
     class Meta:
@@ -18,8 +18,7 @@ class ApplicationContainers(models.Model):
     app_container_id = models.AutoField(primary_key=True)
     app_id = models.IntegerField(blank=True, null=True)
     container_id = models.IntegerField(blank=True, null=True)
-    position_x = models.IntegerField(blank=True, null=True)
-    position_y = models.IntegerField(blank=True, null=True)
+    position = models.JSONField(blank=True, null=True)
     arguments = models.JSONField(blank=True, null=True)
 
 class AllContainers(models.Model):

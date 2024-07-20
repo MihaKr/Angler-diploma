@@ -33,7 +33,7 @@ interface DynamicComponentProps {
 
 }
 
-export const TsContent: React.FC<TsContentProps> = ({ setShowModal, showModal, contArgs, setcontArgs,setConfFile, conf_file, setApp_cont_id, app_cont_id, s}) => {
+export const TsContent: React.FC<TsContentProps> = ({ setShowModal, showModal, contArgs, setcontArgs,setConfFile, conf_file, setApp_cont_id, app_cont_id }) => {
     const [PageComponent, setPageComponent] = useState<React.ComponentType<DynamicComponentProps> | null>(null);
     const [contName, setContName] = useState<any> (null)
 
@@ -106,6 +106,8 @@ export const TsContent: React.FC<TsContentProps> = ({ setShowModal, showModal, c
         </div>
     );
 };
+
+TsContent.displayName = "TsContent";
 
 export default TsContent;
 

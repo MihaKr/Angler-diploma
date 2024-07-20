@@ -1,25 +1,42 @@
-import React, {FC, useState} from 'react';
-import {defaultCoordinates, Translate, useDraggable} from '@dnd-kit/core';
-import {Coordinates, CSS} from '@dnd-kit/utilities';
-import styles from "./DraggableComponent.module.css";
-import DraggableComponent from "@/app/components/DraggableComponent";
+import React, { FC } from 'react';
+import DraggableComponent from './DraggableComponent';
+import ContNode from "@/app/components/ContNode"; // Adjust the import path accordingly
 
 interface ContainerButtonProps {
-    container_id: string
-    container_name: string
-    drag_func: any
+    container_id: string;
+    container_name: string;
+    drag_func: any;
 }
 
-const ContainerButton: FC<ContainerButtonProps>= ({ container_id,container_name, drag_func }) => {
-    //props.top != 0 ? `absolute left-${props.left}px top-${props.top}0x` : "justify-center"                 className={`left-[${props.top}px] top-[${props.top}px]`}
-    return (
-        <div className={" px-2 py-2 "}>
-            <DraggableComponent tmp_key={String(container_id)}>
-                {container_name}
-            </DraggableComponent>
-        </div>
+const ContainerButton: FC<ContainerButtonProps> = ({ container_id, container_name, drag_func }) => {
 
+    const onDragStart = (event: React.DragEvent<HTMLDivElement>, node: string) => {
+        event.dataTransfer.setData('application/reactflow', JSON.stringify({ node, container_id, container_name }));
+        event.dataTransfer.effectAllowed = 'move';
+    };
+
+    return (
+            <div className=" px-2 py-2 flex items-center justify-center w-full bg-blue-500 text-white py-2 rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-700 z-50" onDragStart={(event) => onDragStart(event, 'input')} draggable>
+                {container_name}
+            </div>
     );
 }
 
 export default ContainerButton;
+
+
+
+/*
+*
+* const ContainerButton: FC<ContainerButtonProps> = ({ container_id, container_name }) => {
+    return (
+        <div className="px-2 py-2">
+            <DraggableComponent tmp_key={container_id}>
+                {container_name}
+            </DraggableComponent>
+        </div>
+    );
+    *
+    * onDragStart={(event) => onDragStart(event, 'input')} draggable>
+}
+* */

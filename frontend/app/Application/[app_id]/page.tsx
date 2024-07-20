@@ -55,55 +55,6 @@ export default function Page({ params }: { params: { app_id: number} }) {
     const [successMessage, setSuccessMessage] = useState<any>('');
     const [check, setCheck] = useState<any>('');
 
-    const handleClickAllContainers = async (e: DragEndEvent) => {
-        if(activeContainers.length > 0) {
-            const tmp_cont = [...activeContainers];
-            let new_cont = {
-                "app_container_id": 0, //max current +1,
-                "container_id": +e.active.id,//e id,
-                "app_id": +params.app_id, //convert to num
-                "position": { "x": +e.delta.x, "y": +e.delta.y }
-            }
-            const r = await postData(new_cont, 'http://0.0.0.0:8000/angler_core/app_cont')
-            new_cont.app_container_id = r.app_container_id
-            tmp_cont.push(new_cont)
-
-            setActiveContainers(tmp_cont)
-
-        }
-
-        else {
-            let tmp_cont = [];
-            let new_cont = {
-                "app_container_id": 0,
-                "container_id": +e.active.id,//e id,
-                "app_id": +params.app_id, //convert to num
-                "position": { "x": +e.delta.x, "y": +e.delta.y }
-            }
-
-            const r = await postData(new_cont, 'http://0.0.0.0:8000/angler_core/app_cont')
-            new_cont.app_container_id = r.app_container_id
-            tmp_cont.push(new_cont)
-
-            setActiveContainers(tmp_cont)
-        }
-    }
-
-    function getMax(arr: AllContainersI[]) {
-        let max = 0
-        for (let i = 0; i < arr.length; i++) {
-            if (arr[i].app_container_id > max) {
-                max = arr[i].app_container_id
-            }
-        }
-
-        return max
-    }
-
-    const updateContainers = (newContainers: any[]) => {
-        setAllContainers(newContainers);
-    };
-
     useEffect(() => {
         const updateActiveContainers = () => {
             const updatedActiveContainers = activeContainers.map((data: allContainers) => {
@@ -166,7 +117,6 @@ export default function Page({ params }: { params: { app_id: number} }) {
                                 group_name={container.key}
                                 allContainers={container.items}
                                 setAllContainers={setAllContainers}
-                                handleClickAllContainers={handleClickAllContainers}
                             />
                         </div>
                     ))}

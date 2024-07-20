@@ -27,23 +27,17 @@ const AllContainers: FC<AllContainerProps>= ({ all_containers, drag_func }) => {
     const snapToGrid = useMemo(() => createSnapModifier(gridSize), [gridSize]);
 
     return (
-        <DndContext onDragEnd={drag_func}
-                    modifiers={[snapToGrid]}
 
-        >
-            <div className="flex flex-col items-start">
-                <div className="flex flex-col items-start">
-                    {all_containers.map((container: AllContainers, index: number) => (
-                        <div key={container.container_id} className="p-4 flex justify-start">
-                            <ContainerButton container_id={container.container_id}
-                                             container_name={container.container_name}
-                                             drag_func={drag_func}/>
-                        </div>
-                    ))}
-
+        <div className="flex flex-col items-start max-h-36 overflow-y-auto">
+            {all_containers.map((container: AllContainers, index: number) => (
+                <div key={container.container_id} className=" p-2 flex max-w-full justify-start">
+                    <ContainerButton container_id={container.container_id}
+                                     container_name={container.container_name}
+                                     drag_func={drag_func}/>
                 </div>
-            </div>
-        </DndContext>
+            ))}
+        </div>
+
     );
 }
 

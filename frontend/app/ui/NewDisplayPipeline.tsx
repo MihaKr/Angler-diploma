@@ -51,7 +51,7 @@ const DisplayPipeline: React.FC<DisplayPipelineProps> = ({ data, updateData, edg
     const [edges, setEdges] = useState<Edge[]>([]);
     const [loading, setLoading] = useState(true);
 
-    console.log(data)
+    console.log(nodes)
 
 
     useEffect(() => {
@@ -84,9 +84,7 @@ const DisplayPipeline: React.FC<DisplayPipelineProps> = ({ data, updateData, edg
         }
     }, [nodes]);
 
-    if (loading) {
-        return <p>Loading...</p>; // Render loading indicator
-    }
+
 
     return (
             <div className="max-w-full and max-h-full">

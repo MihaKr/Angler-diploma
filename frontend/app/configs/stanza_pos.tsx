@@ -11,7 +11,7 @@ interface MyComponentProps {
     app_cont_id: string
 }
 
-const config: React.FC<MyComponentProps> = ({ contArgs, setcontArgs, app_cont_id }) => {
+const Config: React.FC<MyComponentProps> = ({ contArgs, setcontArgs, app_cont_id }) => {
     const [filePath, setfilePath] = useState("");
 
     function pathType(e: React.ChangeEvent<HTMLInputElement>) {
@@ -55,4 +55,4 @@ const config: React.FC<MyComponentProps> = ({ contArgs, setcontArgs, app_cont_id
     );
 };
 
-export default config;
+export default Config;

@@ -1,0 +1,48 @@
+Watching for file changes with StatReloader
+Listen failure: Couldn't listen on 0.0.0.0:8000: [Errno 48] Address already in use.
+Watching for file changes with StatReloader
+HTTP GET /angler_core/api 200 [0.02, 127.0.0.1:52287]
+HTTP OPTIONS /angler_core/api 200 [0.00, 127.0.0.1:52287]
+HTTP POST /angler_core/api 201 [0.02, 127.0.0.1:52287]
+HTTP GET /angler_core/api 200 [0.02, 127.0.0.1:52287]
+WebSocket HANDSHAKING /ws/path/ [127.0.0.1:52344]
+WebSocket CONNECT /ws/path/ [127.0.0.1:52344]
+HTTP GET /angler_core/cont_link?id=1 200 [0.35, 127.0.0.1:52340]
+HTTP GET /angler_core/all_cont?cont_id= 200 [0.35, 127.0.0.1:52342]
+HTTP GET /angler_core/app_cont?id=1 200 [0.36, 127.0.0.1:52339]
+HTTP GET /angler_core/all_cont 200 [0.35, 127.0.0.1:52341]
+Exception inside application: Connection closed by server.
+Traceback (most recent call last):
+  File "/Users/mihakristofelc/PycharmProjects/Angler-diploma/angler_backend/.venv/lib/python3.11/site-packages/django/contrib/staticfiles/handlers.py", line 101, in __call__
+    return await self.application(scope, receive, send)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mihakristofelc/PycharmProjects/Angler-diploma/angler_backend/.venv/lib/python3.11/site-packages/channels/routing.py", line 62, in __call__
+    return await application(scope, receive, send)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mihakristofelc/PycharmProjects/Angler-diploma/angler_backend/.venv/lib/python3.11/site-packages/channels/security/websocket.py", line 37, in __call__
+    return await self.application(scope, receive, send)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mihakristofelc/PycharmProjects/Angler-diploma/angler_backend/.venv/lib/python3.11/site-packages/channels/sessions.py", line 47, in __call__
+    return await self.inner(dict(scope, cookies=cookies), receive, send)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mihakristofelc/PycharmProjects/Angler-diploma/angler_backend/.venv/lib/python3.11/site-packages/channels/sessions.py", line 263, in __call__
+    return await self.inner(wrapper.scope, receive, wrapper.send)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mihakristofelc/PycharmProjects/Angler-diploma/angler_backend/.venv/lib/python3.11/site-packages/channels/auth.py", line 185, in __call__
+    return await super().__call__(scope, receive, send)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mihakristofelc/PycharmProjects/Angler-diploma/angler_backend/.venv/lib/python3.11/site-packages/channels/middleware.py", line 24, in __call__
+    return await self.inner(scope, receive, send)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mihakristofelc/PycharmProjects/Angler-diploma/angler_backend/.venv/lib/python3.11/site-packages/channels/routing.py", line 132, in __call__
+    return await application(
+           ^^^^^^^^^^^^^^^^^^
+  File "/Users/mihakristofelc/PycharmProjects/Angler-diploma/angler_backend/.venv/lib/python3.11/site-packages/channels/consumer.py", line 94, in app
+    return await consumer(scope, receive, send)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mihakristofelc/PycharmProjects/Angler-diploma/angler_backend/.venv/lib/python3.11/site-packages/channels/consumer.py", line 58, in __call__
+    await await_many_dispatch(
+  File "/Users/mihakristofelc/PycharmProjects/Angler-diploma/angler_backend/.venv/lib/python3.11/site-packages/channels/utils.py", line 57, in await_many_dispatch
+    await task
+redis.exceptions.ConnectionError: Connection closed by server.
+WebSocket DISCONNECT /ws/path/ [127.0.0.1:52344]

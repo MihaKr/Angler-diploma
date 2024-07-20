@@ -7,7 +7,7 @@ import {router} from "next/client";
 const postData = async (formData: any, url: string) => {
     try {
         const response = await axios.post(url, formData);
-        //console.log('Response data:', response.data);
+        console.log('Response data:', response.data);
         return response.data; // Return the response data
     } catch (error) {
         console.error('Error:', error);
