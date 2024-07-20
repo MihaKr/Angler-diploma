@@ -29,6 +29,7 @@ apply_django_migrations() {
     echo "Applying Django migrations..."
     source $venv_path/bin/activate
     python3 ./angler_backend/manage.py migrate  
+    python3 ./angler_backend/manage.py insert_data
     deactivate
     echo "Django migrations applied successfully."
 }
@@ -46,7 +47,7 @@ start_django_server() {
 run_docker_compose() {
     local compose_file=$1
     echo "Running Docker Compose with $compose_file..."
-    docker-compose -f $compose_file up -d --force-recreate
+    docker-compose -f $compose_file up --detach
     echo "Docker Compose is up and running."
 }
 
@@ -59,7 +60,7 @@ install_python_dependencies $requirements_path
 # Run Docker Compose
 run_docker_compose $docker_compose_path 
 
-sleep 10
+sleep 3
 
 # Apply Django migrations
 apply_django_migrations

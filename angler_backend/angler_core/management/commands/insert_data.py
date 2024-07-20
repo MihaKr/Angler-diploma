@@ -1,5 +1,5 @@
 from django.core.management.base import BaseCommand
-from .models import AllContainers
+from angler_core.models import AllContainers
 
 class Command(BaseCommand):
     help = 'Insert initial data into the angler_core_allcontainers table'

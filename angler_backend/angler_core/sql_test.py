@@ -67,9 +67,13 @@ def build_images(list_cont):
     channel_layer = get_channel_layer()
     images = {}
     for i in list_cont:
-        read_path = os.path.abspath(os.path.join("../containers", i))
-        print(f"Reading path for container {i}: {read_path}")  # Add this line for debugging
-        images[i], logs = client.images.build(path=read_path, tag=i, buildargs=list_cont[i])
+        #read_path = os.path.abspath(os.path.join("../containers", i))
+        read_path = os.path.abspath(os.path.join(os.path.dirname(__file__), '../..//containers', i))
+        print(os.listdir(read_path))
+        print(f"Reading path for container {i}: {read_path}")
+        images[i], logs = client.images.build(path=str(read_path), tag=i, buildargs=list_cont[i])
+        #images[i], logs = client.images.build(path='/Users/mihakristofelc/PycharmProjects/Angler-diploma/containers/read', tag=i, buildargs=list_cont[i])
+
         for chunk in logs:
             if 'stream' in chunk:
                 for line in chunk['stream'].splitlines():
