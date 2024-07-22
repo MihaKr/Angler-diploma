@@ -6,7 +6,7 @@ import {ApplicationButton} from "@/app/components/AppSelectionButton";
 const DataDisplayer: React.FC<{ data: any }> = ({ data }) => {
 
     const sortedData = data.sort((a: any, b: any) => {
-        return new Date(b.app_date_last_Modified).getTime() - new Date(a.app_date_last_Modified).getTime();
+        return new Date(b.app_date_last_modified).getTime() - new Date(a.app_date_last_modified).getTime();
     });
 
     return (
@@ -17,7 +17,7 @@ const DataDisplayer: React.FC<{ data: any }> = ({ data }) => {
                 </div>
                 {sortedData.slice(0, 9).map((item: any) => (
                     <div key={item.app_id} className="p-4">
-                        <ApplicationButton text={item.app_name} app_id={item.app_id} date_last_Modified={item.app_date_last_Modified}/>
+                        <ApplicationButton text={item.app_name} app_id={item.app_id} date_last_modified={item.app_date_last_modified}/>
                     </div>
                 ))}
             </div>

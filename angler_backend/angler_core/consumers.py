@@ -2,9 +2,9 @@ import json
 from channels.generic.websocket import AsyncWebsocketConsumer
 from asgiref.sync import async_to_sync
 
-class YourConsumer(AsyncWebsocketConsumer):
+class AnglerConsumer(AsyncWebsocketConsumer):
     async def connect(self):
-        self.group_name = 'your_group_name'
+        self.group_name = 'angler_log'
         await self.channel_layer.group_add(
             self.group_name,
             self.channel_name
@@ -24,7 +24,7 @@ class YourConsumer(AsyncWebsocketConsumer):
             'message': message
         }))
 
-    async def your_group_name_message(self, event):
+    async def angler_log_message(self, event):
         message = event['message']
         await self.send(text_data=json.dumps({
             'message': message

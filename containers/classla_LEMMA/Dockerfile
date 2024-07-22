@@ -8,5 +8,5 @@ RUN pip install classla
 COPY classla_lemma.py classla_lemma.py
 #COPY stanza_resources '/root/stanza_resources'
 
-CMD ["python", "./classla_lemma.py"]
+ENTRYPOINT ["python", "./classla_lemma.py"]
 #CMD ["tail", "-f", "/dev/null"]

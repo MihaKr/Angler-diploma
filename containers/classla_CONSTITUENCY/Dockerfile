@@ -8,5 +8,5 @@ RUN pip install classla
 COPY classla_constituency.py classla_constituency.py
 #COPY stanza_resources '/root/stanza_resources'
 
-CMD ["python", "./classla_constituency.py"]
+ENTRYPOINT ["python", "./classla_constituency.py"]
 #CMD ["tail", "-f", "/dev/null"]

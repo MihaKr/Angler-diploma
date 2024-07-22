@@ -4,14 +4,17 @@ import postData from "@/app/components/dataPost";
 interface CreateAppFormModalProps {
     showModal: boolean;
     setShowModal? : React.Dispatch<React.SetStateAction<boolean>>;
+    apps: []
+    setApps: React.Dispatch<React.SetStateAction<any[]>>;
 }
 
 type MyData = {
     app_name: string;
     owner: string;
+    date_last_modified: any
 };
 
-export const CreateAppFormModal: React.FC<CreateAppFormModalProps> = ({ showModal, setShowModal }) => {
+export const CreateAppFormModal: React.FC<CreateAppFormModalProps> = ({ showModal, setShowModal, apps, setApps }) => {
     const [appTitle, setAppTitle] = useState("");
 
     const handleClickBackground: React.MouseEventHandler<HTMLDivElement> = (event) => {
@@ -31,14 +34,20 @@ export const CreateAppFormModal: React.FC<CreateAppFormModalProps> = ({ showModa
 
         const data: MyData = {
             app_name: appTitle,
-            owner: "miha"
-
-            // Add more properties as needed
+            owner: "miha",
+            date_last_modified: Date.now()
         };
+
+
+        setApps(prevState => [
+            ...prevState,
+            data
+        ]);
+
         postData(data,'http://127.0.0.1:8000/angler_core/api')
 
         // @ts-ignore
-        setShowModal(false); // Close the dialog when the form is submitted
+        setShowModal(false);
     }
 
     function AppTyped(e: React.ChangeEvent<HTMLInputElement>) {

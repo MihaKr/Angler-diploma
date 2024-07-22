@@ -67,20 +67,18 @@ def build_images(list_cont):
     channel_layer = get_channel_layer()
     images = {}
     for i in list_cont:
-        #read_path = os.path.abspath(os.path.join("../containers", i))
-        read_path = os.path.abspath(os.path.join(os.path.dirname(__file__), '../..//containers', i))
+        read_path = os.path.abspath(os.path.join(os.path.dirname(__file__), '../../containers', i))
         print(os.listdir(read_path))
         print(f"Reading path for container {i}: {read_path}")
         images[i], logs = client.images.build(path=str(read_path), tag=i, buildargs=list_cont[i])
-        #images[i], logs = client.images.build(path='/Users/mihakristofelc/PycharmProjects/Angler-diploma/containers/read', tag=i, buildargs=list_cont[i])
 
         for chunk in logs:
             if 'stream' in chunk:
                 for line in chunk['stream'].splitlines():
                     async_to_sync(channel_layer.group_send)(
-                        'your_group_name',
+                        'angler_log',
                         {
-                            'type': 'your_group_name_message',
+                            'type': 'angler_log_message',
                             'message': '[' + datetime.now().strftime("%m/%d/%Y %H:%M:%S") + '] ' + line
                         }
                     )
@@ -103,16 +101,26 @@ def run_containers(list_img):
             container = client.containers.get(x.id)
             while container.status != 'exited':
                 abc = container.logs().decode('utf-8')
-                async_to_sync(channel_layer.group_send)(
-                    'your_group_name',
-                    {
-                        'type': 'your_group_name_message',
-                        'message': '[' + datetime.now().strftime("%m/%d/%Y %H:%M:%S") + '] ' + abc
-                    }
-                )
-                time.sleep(5)
+                if 'abc_old' in locals():
+                    if abc != abc_old:
+                        async_to_sync(channel_layer.group_send)(
+                            'angler_log',
+                            {
+                                'type': 'angler_log_message',
+                                'message': '[' + datetime.now().strftime("%m/%d/%Y %H:%M:%S") + '] ' + abc
+                            }
+                        )
+                else:
+                    async_to_sync(channel_layer.group_send)(
+                        'angler_log',
+                        {
+                            'type': 'angler_log_message',
+                            'message': '[' + datetime.now().strftime("%m/%d/%Y %H:%M:%S") + '] ' + abc
+                        }
+                    )
+                time.sleep(2)
+                abc_old = container.logs().decode('utf-8')
                 container.reload()
-                abc = container.logs()
 
 
     return list
@@ -128,9 +136,9 @@ def run_app_func(id, args):
     channel_layer = get_channel_layer()
 
     async_to_sync(channel_layer.group_send)(
-        'your_group_name',
+        'angler_log',
         {
-            'type': 'your_group_name_message',
+            'type': 'angler_log_message',
             'message': '[' + datetime.now().strftime("%m/%d/%Y %H:%M:%S") + '] ' + 'RUN STARTED'
         }
     )
@@ -157,17 +165,17 @@ def run_app_func(id, args):
     length = end - start
 
     async_to_sync(channel_layer.group_send)(
-        'your_group_name',
+        'angler_log',
         {
-            'type': 'your_group_name_message',
+            'type': 'angler_log_message',
             'message': '[' + datetime.now().strftime("%m/%d/%Y %H:%M:%S") + '] ' + 'RUN FINISHED'
         }
     )
 
     async_to_sync(channel_layer.group_send)(
-        'your_group_name',
+        'angler_log',
         {
-            'type': 'your_group_name_message',
+            'type': 'angler_log_message',
             'message': '[' + datetime.now().strftime("%m/%d/%Y %H:%M:%S") + '] ' + 'TIME TAKEN: ' + str(length) + ' seconds'
         }
     )

@@ -8,5 +8,5 @@ RUN pip install stanza
 COPY stanza_ner.py stanza_ner.py
 COPY stanza_resources '/root/stanza_resources'
 
-ENTRYPOINT ["python", "./stanza_ner.py"]
-#CMD ["tail", "-f", "/dev/null"]
+#ENTRYPOINT ["python", "./stanza_ner.py"]
+CMD ["tail", "-f", "/dev/null"]

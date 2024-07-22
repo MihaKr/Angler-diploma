@@ -1,6 +1,6 @@
 "use client"
 import { useRouter } from 'next/navigation'
-import ori from "../../public/ori.jpeg";
+import stock from "../../public/stock.jpg";
 import Image from 'next/image'
 import dateConvert from "@/app/helpers/dateHelper";
 
@@ -8,10 +8,10 @@ import dateConvert from "@/app/helpers/dateHelper";
 interface AppSelectionButtonProps {
     text: string
     app_id: Number
-    date_last_Modified: Date
+    date_last_modified: Date
 }
 
-export const ApplicationButton: React.FC<AppSelectionButtonProps> = ({ text, app_id, date_last_Modified}) => {
+export const ApplicationButton: React.FC<AppSelectionButtonProps> = ({ text, app_id, date_last_modified}) => {
 
     const click = () => {
         router.push(`/Application/${app_id}`);
@@ -26,7 +26,7 @@ export const ApplicationButton: React.FC<AppSelectionButtonProps> = ({ text, app
 });
     */
 
-    dateConvert(date_last_Modified)
+    dateConvert(date_last_modified)
 
 
     const router = useRouter()
@@ -35,12 +35,10 @@ export const ApplicationButton: React.FC<AppSelectionButtonProps> = ({ text, app
         <div className="bg-white hover:bg-gray-100 hover:cursor-pointer rounded-lg shadow-lg p-4 max-w-sm"
              onClick={click}
         >
-            <Image src={ori} alt="a placeholder cat pic" width={350} height={350} className="rounded-t-lg w-full"/>
+            <Image src={stock} alt="a placeholder pic" width={350} height={350} className="rounded-t-lg w-full"/>
             <div className="p-4">
                 <h5 className="text-lg font-bold"> {text}</h5>
-                <p className="text-gray-700">App: </p>
-                <p className="text-gray-600 text-sm">Created by</p>
-                <p className="text-gray-500 text-xs">Last change: {dateConvert(date_last_Modified)}</p>
+                <p className="text-gray-500 text-xs">Last change: {dateConvert(date_last_modified)}</p>
             </div>
         </div>
     )

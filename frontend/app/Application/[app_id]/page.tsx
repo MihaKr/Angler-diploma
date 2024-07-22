@@ -109,7 +109,7 @@ export default function Page({ params }: { params: { app_id: number} }) {
                 />
                 <DataFetcher url={`http://0.0.0.0:8000/angler_core/all_cont`} setData={setAllContainers}/>
             </div>
-            <div className="grid grid-cols-5 flex-1 overflow-hidden">
+            <div className="grid grid-cols-5 flex-1 overflow-hidden max-h-[70%]">
                 <div className="bg-white shadow-md rounded-lg p-4 w-full">
                     {groups.map((container: GroupedContainers, index: number) => (
                         <div key={container.key} className="p-2">

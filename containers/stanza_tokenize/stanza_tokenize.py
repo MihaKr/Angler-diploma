@@ -1,4 +1,6 @@
 import stanza
+import pickle
+from stanza.utils.conll import CoNLL
 
 def read_file(file_path):
     with open(file_path, 'r') as file:
@@ -6,9 +8,8 @@ def read_file(file_path):
     return content
 
 def save_to_file(content, output_path):
-    with open(output_path, 'w') as file:
-        for item in content:
-            file.write(f"{item}\n")
+    with open(output_path, 'wb') as file:
+         pickle.dump(content, file)
 
 def tokenize_stanza(text):
     nlp_tokenized = stanza.Pipeline(lang='en', processors='tokenize', tokenize_pretokenized=True)
@@ -17,6 +18,7 @@ def tokenize_stanza(text):
 
 file = read_file('/mnt/angler/into_text.txt')
 tokenized_text_f = tokenize_stanza(file)
-print(tokenized_text_f)
-save_to_file(tokenized_text_f.sentences, '/mnt/angler/into_text.txt')
+#dicts = tokenized_text_f.to_dict()
+CoNLL.write_doc2conll(tokenized_text_f, "/mnt/angler/into_text.conllu")
 
+#save_to_file(dicts, '/mnt/angler/into_text.pkl')

@@ -1,0 +1,51 @@
+[[
+  {
+    "id": 1,
+    "text": "Obama",
+    "upos": "PROPN",
+    "xpos": "NNP",
+    "feats": "Number=Sing",
+    "misc": "",
+    "start_char": 0,
+    "end_char": 5
+  },
+  {
+    "id": 2,
+    "text": "was",
+    "upos": "AUX",
+    "xpos": "VBD",
+    "feats": "Mood=Ind|Number=Sing|Person=3|Tense=Past|VerbForm=Fin",
+    "misc": "",
+    "start_char": 6,
+    "end_char": 9
+  },
+  {
+    "id": 3,
+    "text": "born",
+    "upos": "VERB",
+    "xpos": "VBN",
+    "feats": "Tense=Past|VerbForm=Part|Voice=Pass",
+    "misc": "",
+    "start_char": 10,
+    "end_char": 14
+  },
+  {
+    "id": 4,
+    "text": "in",
+    "upos": "ADP",
+    "xpos": "IN",
+    "misc": "",
+    "start_char": 15,
+    "end_char": 17
+  },
+  {
+    "id": 5,
+    "text": "hawaii",
+    "upos": "PROPN",
+    "xpos": "NNP",
+    "feats": "Number=Sing",
+    "misc": "SpaceAfter=No",
+    "start_char": 18,
+    "end_char": 24
+  }
+]]

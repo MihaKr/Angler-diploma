@@ -8,5 +8,5 @@ RUN pip install classla
 COPY classla_depparse.py classla_depparse.py
 #COPY stanza_resources '/root/stanza_resources'
 
-CMD ["python", "./classla.py"]
+ENTRYPOINT ["python", "./classla.py"]
 #CMD ["tail", "-f", "/dev/null"]

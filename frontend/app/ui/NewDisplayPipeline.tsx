@@ -53,7 +53,6 @@ const DisplayPipeline: React.FC<DisplayPipelineProps> = ({ data, updateData, edg
 
     console.log(nodes)
 
-
     useEffect(() => {
         setNodes(
             data.map((data: AllContainersI, index: number) => ({

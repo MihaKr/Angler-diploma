@@ -31,7 +31,7 @@ const WebSocketComponent: React.FC<logProps>  = ({ check }) => {
 
     return (
         <div className="flex flex-col flex-1">
-            <div className="flex-1 bg-gray-300 w-full p-2 overflow-auto">
+            <div className="flex-1 bg-gray-300 w-full h-full p-2 overflow-auto">
                 {message.map((mes: string, index: number) => (
                     <div key={index} className="flex justify-between items-center text-gray-700 mb-1">
                         <span>{mes}</span>

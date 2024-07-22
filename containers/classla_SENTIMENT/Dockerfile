@@ -8,5 +8,5 @@ RUN pip install classla
 COPY classla_sentiment.py classla_sentiment.py
 #COPY stanza_resources '/root/stanza_resources'
 
-CMD ["python", "./classla_sentiment.py"]
+ENTRYPOINT ["python", "./classla_sentiment.py"]
 #CMD ["tail", "-f", "/dev/null"]

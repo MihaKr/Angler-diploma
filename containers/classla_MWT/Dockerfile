@@ -8,5 +8,5 @@ RUN pip install classla
 COPY classla_mwt.py classla_mwt.py
 #COPY stanza_resources '/root/stanza_resources'
 
-CMD ["python", "./classla_mwt.py"]
+ENTRYPOINT ["python", "./classla_mwt.py"]
 #CMD ["tail", "-f", "/dev/null"]

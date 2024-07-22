@@ -11,17 +11,17 @@ import Footer from "@/app/ui/Footer";
 import TsContent from "@/app/components/tsContent";
 
 
-//TODO: COMPONENT MODAL
 export default function Index() {
     const [showModal, setShowModal] = useState(false);
+    const [apps, setApps] = useState<any>([]);
+
 
     return (
         <div className="flex flex-col w-full min-h-screen bg-gray-100">
             <SideMenu setShowModal={setShowModal}/>
-            <CenterMenu />
-            <CreateAppFormModal showModal={showModal} setShowModal={setShowModal}/>
+            <CenterMenu apps={apps} setApps={setApps}/>
+            <CreateAppFormModal showModal={showModal} setShowModal={setShowModal} apps={apps} setApps={setApps}/>
             <Footer />
-
         </div>
     )
 }

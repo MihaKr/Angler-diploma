@@ -8,3 +8,4 @@ COPY stanza_pos.py stanza_pos.py
 COPY stanza_resources '/root/stanza_resources'
 
 ENTRYPOINT ["python", "./stanza_pos.py"]
+#CMD ["tail", "-f", "/dev/null"]
