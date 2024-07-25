@@ -15,7 +15,9 @@ const RunAppButton: FC<ContainerButtonProps> = ({ app_id, successMessage, setSuc
         //dataPost(f, 'http://127.0.0.1:8000/angler_core/run_app')
         setSuccessMessage('App run started!');
 
-        fetch('http://127.0.0.1:8000/angler_core/run_app', {
+        console.log(f)
+
+        fetch('http://localhost:8000/angler_core/run_app', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'

@@ -91,8 +91,8 @@ DATABASES = {
         'NAME': 'angler_dev',
         'USER': 'miha_dev',
         'PASSWORD': 'miha_dev',
-        'HOST': 'localhost',
-        'PORT': '',
+        'HOST': 'postgres',
+        'PORT': '5432',
     }
 }
 

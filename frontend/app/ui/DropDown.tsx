@@ -28,21 +28,20 @@ export const DropDown: React.FC<DropDownProps> = ({ allContainers, setAllContain
     };
 
     return (
-        <div className={"flex-grow justify-between"}>
-            <div className={"inline-flex items-center justify-center w-full"}>
-                <a href="#" onClick={toggleExpand} className={"content-end items-center inline-flex justify-between .flex-1"}>
-                    <p className={`text-dark-purple p-5 hover:text-Angler-Dark_Blue hover:cursor-pointer`}>{group_name}</p>
+        <div className="flex flex-col justify-between">
+            <div className="flex items-center justify-between w-full">
+                <a href="#" onClick={toggleExpand} className="flex items-center justify-between w-full">
+                    <p className="text-dark-purple p-5 hover:text-blue-800 cursor-pointer">{group_name}</p>
                     {isExpanded ?
-                        <MinusIcon className="size-6 text-blue-500"/>:
-                        <PlusIcon className="size-6 text-blue-500"/>}
+                        <MinusIcon className="w-6 h-6 text-blue-500"/> :
+                        <PlusIcon className="w-6 h-6 text-blue-500"/>}
                 </a>
             </div>
-            <div>
-                {isExpanded ? <div>
-                        <AllContainers all_containers={allContainers} drag_func={handleClickAllContainers}/>
-                </div> :
-                    <div></div>}
-            </div>
+            {isExpanded && (
+                <div>
+                    <AllContainers all_containers={allContainers} drag_func={handleClickAllContainers}/>
+                </div>
+            )}
         </div>
     );
 }

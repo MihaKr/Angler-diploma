@@ -51,8 +51,6 @@ const DisplayPipeline: React.FC<DisplayPipelineProps> = ({ data, updateData, edg
     const [edges, setEdges] = useState<Edge[]>([]);
     const [loading, setLoading] = useState(true);
 
-    console.log(nodes)
-
     useEffect(() => {
         setNodes(
             data.map((data: AllContainersI, index: number) => ({

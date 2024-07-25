@@ -28,12 +28,14 @@ const AllContainers: FC<AllContainerProps>= ({ all_containers, drag_func }) => {
 
     return (
 
-        <div className="flex flex-col items-start max-h-36 overflow-y-auto">
+        <div className="grid grid-cols-3 gap-4 max-h-36 overflow-y-auto">
             {all_containers.map((container: AllContainers, index: number) => (
-                <div key={container.container_id} className=" p-2 flex max-w-full justify-start">
-                    <ContainerButton container_id={container.container_id}
-                                     container_name={container.container_name}
-                                     drag_func={drag_func}/>
+                <div key={container.container_id} className="p-2">
+                    <ContainerButton
+                        container_id={container.container_id}
+                        container_name={container.container_name}
+                        drag_func={drag_func}
+                    />
                 </div>
             ))}
         </div>

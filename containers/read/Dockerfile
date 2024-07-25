@@ -1,10 +1,12 @@
-FROM alpine:latest
+FROM python:3.11.9-slim
 
-WORKDIR /app
-COPY copy_host_docker.sh /app/
+WORKDIR /usr/src/app
 
-RUN chmod +x /app/copy_host_docker.sh
+#RUN pip install numpy
+RUN pip install requests
 
-ENTRYPOINT ["/bin/sh", "/app/copy_host_docker.sh"]
-#RUN echo $FILEPATH
+COPY copy_host_docker.py copy_host_docker.py
+#COPY stanza_resources '/root/stanza_resources'
+
+ENTRYPOINT ["python", "./copy_host_docker.py"]
 #CMD ["tail", "-f", "/dev/null"]

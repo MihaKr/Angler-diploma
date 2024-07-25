@@ -10,9 +10,11 @@ import datetime
 from django.conf import settings
 from django.utils.timezone import make_aware
 
-from .models import Applications, ApplicationContainers, AllContainers, LinkContainers
+from .models import Applications, ApplicationContainers, AllContainers, LinkContainers, Files
 from .serializers import AnglerSerializer, AnglerAppContSerializer, AllContainersSerializer, LinkContainersSerializer, \
     FileSerializer
+from django.shortcuts import get_object_or_404
+
 
 from .sql_test import run_app_func
 
@@ -104,8 +106,8 @@ class AnglerListAppContView(APIView):
             if request.data['position']['x'] is not None:
                 print(request.data.get('position'))
                 cont_pos = request.data.get('position')
-                cont.position_x = cont_pos['x']
-                cont.position_y = cont_pos['y']
+                cont.position['x'] = cont_pos['x']
+                cont.position['y']= cont_pos['y']
 
                 cont.save()
 
@@ -233,18 +235,31 @@ class LinkContainersView(APIView):
 class RunAppView(APIView):
     def post(self, request, *args, **kwargs):
         x = request.data.get("app_id")
-        args = {}
-        run_app_func(x,args)
+        run_app_func(x)
         return Response({"message": "app_accepted"}, status=status.HTTP_200_OK)
 
 class FileView(APIView):
     def post(self, request, *args, **kwargs):
         serializer = FileSerializer(data=request.data)
+        print(serializer)
         if serializer.is_valid() or request.FILES['file'].content_type == 'text/x-python-script':
             if 'app_container_id' in request.data:
                 file_instance = serializer.save()
                 source_path = file_instance.file.path
-                shutil.copy(source_path, '../docker_host/into_text.txt')
+                #shutil.copy(source_path, '/mnt/docker_host/into_text.txt')
+
+                file = request.FILES.get('file')
+                name = request.data.get('name')
+
+                if file.name == 'into_text.conllu':
+                    destination_path = os.path.join('/mnt/docker_host/', 'into_text123.conllu')
+                    print('conl')
+
+                    with open(destination_path, 'wb+') as destination:
+                        for chunk in file.chunks():
+                            destination.write(chunk)
+                            print("printed")
+
                 return Response(serializer.data, status=status.HTTP_201_CREATED)
             else:
                 file = request.FILES.get('file')
@@ -258,18 +273,31 @@ class FileView(APIView):
                     os.makedirs(path)
 
                 if file.name == 'config.tsx':
-                    destination_path = os.path.join('../frontend/app/configs/', f'{name}.tsx')
+                    destination_path = os.path.join('/mnt/frontend/app/configs/', f'{name}.tsx')
                 else:
                     destination_path = os.path.join(path, file.name)
 
                 with open(destination_path, 'wb+') as destination:
                     for chunk in file.chunks():
                         destination.write(chunk)
-
                 return Response({'message': 'File uploaded successfully'}, status=status.HTTP_201_CREATED)
 
         print(serializer.errors)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    def get(self, request, *args, **kwargs):
+        app_cont_id = request.query_params.get('app_cont_id')
+        if app_cont_id:
+            try:
+                file_tmp = Files.objects.filter(app_container_id=app_cont_id).first()
+                document = get_object_or_404(Files, file_id=file_tmp.file_id)
+                file_path = document.file.path
+                with open(file_path, 'r') as file:
+                    file_content = file.read()
+                    return Response({'file_content': file_content}, status=status.HTTP_200_OK)
+
+                return Response(serializer.data, status=status.HTTP_200_OK)
+            except ApplicationContainers.DoesNotExist:
+                return Response({"message": "Application Container not found"}, status=status.HTTP_404_NOT_FOUND)
 
 
 '''class ContainerArguments(APIView):

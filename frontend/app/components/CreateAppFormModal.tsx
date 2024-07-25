@@ -1,5 +1,6 @@
 import React, {FC, FormEvent, MouseEventHandler, useState} from 'react';
 import postData from "@/app/components/dataPost";
+import dateConvert from "@/app/helpers/dateHelper";
 
 interface CreateAppFormModalProps {
     showModal: boolean;
@@ -9,6 +10,7 @@ interface CreateAppFormModalProps {
 }
 
 type MyData = {
+    app_id: number;
     app_name: string;
     owner: string;
     date_last_modified: any
@@ -25,6 +27,15 @@ export const CreateAppFormModal: React.FC<CreateAppFormModalProps> = ({ showModa
         }
     };
 
+    const get_new_id = async (data: any) => {
+        const r = await postData(data,'http://127.0.0.1:8000/angler_core/api')
+
+        data.app_id = r.app_id
+        data.date_last_modified = dateConvert(r.date_last_modified)
+        return data
+    }
+
+
     async function onSubmit(event: FormEvent<HTMLFormElement>) {
         event.preventDefault();
 
@@ -33,18 +44,17 @@ export const CreateAppFormModal: React.FC<CreateAppFormModalProps> = ({ showModa
         //console.log(formData)
 
         const data: MyData = {
+            app_id: 0,
             app_name: appTitle,
             owner: "miha",
-            date_last_modified: Date.now()
+            date_last_modified: 0
         };
 
+        let new_app = await get_new_id(data)
 
-        setApps(prevState => [
-            ...prevState,
-            data
-        ]);
+        console.log(new_app)
 
-        postData(data,'http://127.0.0.1:8000/angler_core/api')
+        setApps((nds: any[]) => nds.concat(new_app));
 
         // @ts-ignore
         setShowModal(false);

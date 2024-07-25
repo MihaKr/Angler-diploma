@@ -8,7 +8,7 @@ const WebSocketComponent: React.FC<logProps>  = ({ check }) => {
     const [message, setMessage] = useState<any>([]);
 
     useEffect(() => {
-        const socket = new WebSocket('ws://localhost:8000/ws/path/');
+        const socket = new WebSocket('ws://0.0.0.0:8000/ws/path/');
 
         socket.onopen = () => {
             console.log('WebSocket connection established');

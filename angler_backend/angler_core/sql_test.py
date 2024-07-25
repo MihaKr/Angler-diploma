@@ -19,8 +19,11 @@ from angler_core.models import LinkContainers, ApplicationContainers, AllContain
 client.volumes.create(name='angler_store', driver='local')
 
 mount_path = "/mnt/my_volume"
-host_dir = os.path.abspath("../docker_host")
+host_dir = os.path.abspath("/mnt/docker_host")
+host_containers = os.path.abspath("../containers")
 container_dir = "/mnt/host"
+container_guest_dir = "/mnt/containers"
+
 
 def getLinks(app_id):
     links= {}
@@ -67,12 +70,12 @@ def build_images(list_cont):
     channel_layer = get_channel_layer()
     images = {}
     for i in list_cont:
-        read_path = os.path.abspath(os.path.join(os.path.dirname(__file__), '../../containers', i))
-        print(os.listdir(read_path))
+        #read_path = os.path.abspath(os.path.join(os.path.dirname(__file__), '../../containers', i))
+        read_path = os.path.join('/mnt/containers', i)
         print(f"Reading path for container {i}: {read_path}")
         images[i], logs = client.images.build(path=str(read_path), tag=i, buildargs=list_cont[i])
 
-        for chunk in logs:
+        '''for chunk in logs:
             if 'stream' in chunk:
                 for line in chunk['stream'].splitlines():
                     async_to_sync(channel_layer.group_send)(
@@ -81,7 +84,7 @@ def build_images(list_cont):
                             'type': 'angler_log_message',
                             'message': '[' + datetime.now().strftime("%m/%d/%Y %H:%M:%S") + '] ' + line
                         }
-                    )
+                    )'''
     return images
 
 
@@ -93,14 +96,14 @@ def run_containers(list_img):
                 image,
                 detach=True,
                 volumes={
-                    host_dir: {"bind": container_dir, "mode": "rw"},
-                    "angler_store": {"bind": "/mnt/angler", "mode": "rw"}
+                    'angler_store': {'bind': '/mnt/angler_store', 'mode': 'rw'}
                 },
+                network='Angler_net',
             )
             list.append(x)
             container = client.containers.get(x.id)
             while container.status != 'exited':
-                abc = container.logs().decode('utf-8')
+                '''abc = container.logs().decode('utf-8')
                 if 'abc_old' in locals():
                     if abc != abc_old:
                         async_to_sync(channel_layer.group_send)(
@@ -117,7 +120,7 @@ def run_containers(list_img):
                             'type': 'angler_log_message',
                             'message': '[' + datetime.now().strftime("%m/%d/%Y %H:%M:%S") + '] ' + abc
                         }
-                    )
+                    )'''
                 time.sleep(2)
                 abc_old = container.logs().decode('utf-8')
                 container.reload()
@@ -130,18 +133,18 @@ def delete_cont(list_cont):
     for i in list_cont:
         i.remove(force=True)
 
-def run_app_func(id, args):
+def run_app_func(id):
     start = time.time()
 
     channel_layer = get_channel_layer()
 
-    async_to_sync(channel_layer.group_send)(
+    '''async_to_sync(channel_layer.group_send)(
         'angler_log',
         {
             'type': 'angler_log_message',
             'message': '[' + datetime.now().strftime("%m/%d/%Y %H:%M:%S") + '] ' + 'RUN STARTED'
         }
-    )
+    )'''
 
     a,b = getLinks(id)
     print(a)
@@ -164,7 +167,7 @@ def run_app_func(id, args):
     end = time.time()
     length = end - start
 
-    async_to_sync(channel_layer.group_send)(
+    ''''async_to_sync(channel_layer.group_send)(
         'angler_log',
         {
             'type': 'angler_log_message',
@@ -178,5 +181,5 @@ def run_app_func(id, args):
             'type': 'angler_log_message',
             'message': '[' + datetime.now().strftime("%m/%d/%Y %H:%M:%S") + '] ' + 'TIME TAKEN: ' + str(length) + ' seconds'
         }
-    )
+    )'''
 

@@ -17,10 +17,10 @@ def tokenize_stanza(text):
     tokenized_text = nlp_tokenized(text)
     return tokenized_text
 
-file = read_file('/mnt/angler/into_text.pkl')
+#file = read_file('/mnt/angler/into_text.pkl')
 #doc = Document(file)
-doc = CoNLL.conll2doc("/mnt/angler/into_text.conllu")
+doc = CoNLL.conll2doc("/mnt/angler_store/into_text.conllu")
 tokenized_text_f = tokenize_stanza(doc)
-CoNLL.write_doc2conll(tokenized_text_f, "/mnt/angler/into_text.conllu")
+CoNLL.write_doc2conll(tokenized_text_f, "/mnt/angler_store/into_text.conllu")
 #save_to_file(tokenized_text_f.sentences, '/mnt/angler/into_text.pkl')
 

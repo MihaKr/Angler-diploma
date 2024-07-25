@@ -128,7 +128,7 @@ export default function Page({ params }: { params: { app_id: number} }) {
                             className="flex z-20"
                         >
                             <div
-                                className={`flex items-center justify-center w-full bg-blue-500 text-white py-2 rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-700 z-50`}
+                                className={`flex items-center bottom-0 justify-center w-full bg-blue-500 text-white py-2 rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-700 z-50`}
                             >
                                 <p>{"Add New Container"}</p>
                             </div>
@@ -175,7 +175,6 @@ export default function Page({ params }: { params: { app_id: number} }) {
             </div>
             <div className="fixed inset-x-0 bottom-0 min-h-[20%] max-h-[20%] overflow-y-auto rounded-2xl p-4">
                 <div>Debug Log</div>
-                <WebSocketComponent check={successMessage}/>
             </div>
         </div>
 
@@ -194,4 +193,4 @@ export default function Page({ params }: { params: { app_id: number} }) {
                     * `http://0.0.0.0:8000/angler_core/app_cont?id=${conf_file}`, setPageName
 * */
 //<DropDown allContainers={allContainers} setAllContainers={setAllContainers} handleClickAllContainers={handleClickAllContainers}/>
-
+//                <WebSocketComponent check={successMessage}/>
