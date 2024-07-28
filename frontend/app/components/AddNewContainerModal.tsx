@@ -1,34 +1,19 @@
 import React, {FC, FormEvent, MouseEventHandler, useState} from 'react';
 import postData from "@/app/components/dataPost";
-import {router} from "next/client";
-import dataFetch from "@/app/components/dataFetch";
+import {AddNewContainerModalProps, MyData} from "@/app/types";
 declare module "react" {
     interface InputHTMLAttributes<T> extends HTMLAttributes<T> {
         webkitdirectory?: string;
     }
 }
 
-interface AddNewContainerModalProps {
-    showModal: boolean;
-    setShowModal? : React.Dispatch<React.SetStateAction<boolean>>;
-    allContainers: []
-    setAllContainers: React.Dispatch<React.SetStateAction<any[]>>;
-    successMessage: any;
-    setSuccessMessage: React.Dispatch<React.SetStateAction<String>>;
-
-}
-
-type MyData = {
-    container_name: string;
-    container_group: string;
-    container_path: string;
-};
-
 export const AddNewContainerModal: React.FC<AddNewContainerModalProps> = ({ showModal, setShowModal, allContainers, setAllContainers, successMessage, setSuccessMessage}) => {
     const [containerName, setContainerName] = useState("");
     const [containerGroup, SetContainerGroup] = useState("");
     const [containerPath, setContainerPath] = useState("");
     const [containerFolder, setContainerFolder] = useState<FileList | null>(null);
+    const [nodeType, setNodeType] = useState('');
+
 
 
     function handleFileChange(e: React.ChangeEvent<HTMLInputElement>) {
@@ -51,7 +36,8 @@ export const AddNewContainerModal: React.FC<AddNewContainerModalProps> = ({ show
         const data: MyData = {
             container_name: containerName,
             container_group: containerGroup,
-            container_path: containerPath
+            container_path: containerPath,
+            container_type: nodeType
         };
 
         try {
@@ -73,7 +59,9 @@ export const AddNewContainerModal: React.FC<AddNewContainerModalProps> = ({ show
                 ...prevState,
                 {
                     container_name: containerName,
-                    container_group: containerGroup
+                    container_group: containerGroup,
+                    container_type: nodeType
+
                 }
             ]);
 
@@ -96,8 +84,8 @@ export const AddNewContainerModal: React.FC<AddNewContainerModalProps> = ({ show
         SetContainerGroup(e.target.value);
     }
 
-    function pathType(e: React.ChangeEvent<HTMLInputElement>) {
-        setContainerPath(e.target.value);
+    function setRadio(e: React.ChangeEvent<HTMLInputElement>) {
+        setNodeType(e.target.value);
     }
 
 
@@ -160,6 +148,26 @@ export const AddNewContainerModal: React.FC<AddNewContainerModalProps> = ({ show
                                 webkitdirectory="true"
                                 onChange={handleFileChange}
                                 className="mt-1 block w-full border border-gray-300 rounded-md p-2 focus:ring focus:ring-blue-500"
+                            />
+                        </div>
+                        <div className="flex items-center space-x-4">
+                            <label htmlFor="ContNode">Regular Node</label><br/>
+                            <input
+                                type="radio"
+                                id="ContNode"
+                                name="nodeType"
+                                value="ContNode"
+                                checked={nodeType === 'ContNode'}
+                                onChange={setRadio}
+                            />
+                            <label htmlFor="ContNodeResizable">View Node</label><br/><br/>
+                            <input
+                                type="radio"
+                                id="ContNodeResizable"
+                                name="nodeType"
+                                value="ContNodeResizable"
+                                checked={nodeType === 'ContNodeResizable'}
+                                onChange={setRadio}
                             />
                         </div>
                         <div>

@@ -27,9 +27,9 @@ const Config: React.FC<MyComponentProps> = ({ contArgs, setcontArgs, app_cont_id
         setcontArgs(prevState => {
             const newState = {
                 ...prevState,
-                [app_cont_id]: { 'FILEPATH' : filePath }
+                [app_cont_id]: { 'FILEPATH' : filePath, 'app_cont_id':String(app_cont_id)}
             };
-            dataPut({ 'FILEPATH' : filePath }, `http://0.0.0.0:8000/angler_core/app_cont?app_cont_id=${app_cont_id}`);
+            dataPut({ 'FILEPATH' : filePath, 'app_cont_id':String(app_cont_id)  }, `http://0.0.0.0:8000/angler_core/app_cont?app_cont_id=${app_cont_id}`);
             console.log("Inside setState callback:", newState);
             if (setShowModal) {
                 setShowModal(false)

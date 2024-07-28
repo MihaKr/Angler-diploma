@@ -3,48 +3,7 @@
 import React, {useEffect, useMemo, useState} from 'react';
 import ReactFlow, {Edge, ReactFlowProvider, Node, Background, useStoreApi, Position, MiniMap} from "reactflow";
 import Flow from "@/app/components/Flow";
-
-interface AllContainersI {
-    app_container_id: number;
-    container_id: number;
-    app_id: number;
-    position: { x: number, y: number }
-}
-
-interface edge {
-    link_id: number,
-    app_id_link: number
-    origin: number
-    origin_edge: string
-    destination: number
-    destination_edge: string
-}
-
-interface DisplayPipelineProps {
-    data: any;
-    updateData: React.Dispatch<React.SetStateAction<any>>;
-    edge_data: any
-    update_edge: React.Dispatch<React.SetStateAction<any>>;
-    app_id: number
-    setShowModal : React.Dispatch<React.SetStateAction<boolean>>;
-    app_cont_id: string;
-    setApp_cont_id:  React.Dispatch<React.SetStateAction<string>>;
-    conf_file: String;
-    setConfFile:  React.Dispatch<React.SetStateAction<string>>;
-    allCont: []
-}
-
-const nodeSize = {
-    width: 100,
-    height: 40,
-};
-
-interface Container {
-    container_id: string
-    container_name: string
-    container_group: any
-}
-
+import {AllContainersI, DisplayPipelineProps, edge} from "@/app/types";
 
 const DisplayPipeline: React.FC<DisplayPipelineProps> = ({ data, updateData, edge_data, update_edge, app_id, setShowModal, app_cont_id, setApp_cont_id, conf_file, setConfFile, allCont }) => {
     const [nodes, setNodes] = useState<Node[]>([]);
@@ -55,7 +14,7 @@ const DisplayPipeline: React.FC<DisplayPipelineProps> = ({ data, updateData, edg
         setNodes(
             data.map((data: AllContainersI, index: number) => ({
                 id: `node-${ data.app_container_id}`,
-                type: 'ContNode',
+                type: data.container_type,
                 position: { x: data.position.x, y: data.position.y },
                 data: data,
             }))
@@ -80,8 +39,6 @@ const DisplayPipeline: React.FC<DisplayPipelineProps> = ({ data, updateData, edg
             setLoading(false); // Set loading to false when nodes are filled
         }
     }, [nodes]);
-
-
 
     return (
             <div className="max-w-full and max-h-full">

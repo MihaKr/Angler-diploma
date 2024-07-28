@@ -1,12 +1,15 @@
 import React, {FC} from 'react';
 import dataPost from "@/app/components/dataPost";
+import {ContainerButtonProps} from "@/app/types";
 
-interface ContainerButtonProps {
-    app_id: number
-    successMessage: any;
-    setSuccessMessage: React.Dispatch<React.SetStateAction<String>>;
-}
-const RunAppButton: FC<ContainerButtonProps> = ({ app_id, successMessage, setSuccessMessage,  }) => {
+const RunAppButton: FC<ContainerButtonProps> = ({ app_id, successMessage, setSuccessMessage, allContainers, setAllContainers}) => {
+    const updateAttributeForAll = () => {
+        const updatedItems = allContainers.map((item:any) => ({
+            ...item,
+            text: new Date().toISOString(),
+        }));
+        setAllContainers(updatedItems);
+    };
 
     const onClickRunHandler = () => {
         let f = {
@@ -38,6 +41,9 @@ const RunAppButton: FC<ContainerButtonProps> = ({ app_id, successMessage, setSuc
             .catch(error => {
                 console.error('There was a problem with the fetch operation:', error);
             });
+            updateAttributeForAll();
+
+            console.log(allContainers)
 
         setTimeout(() => setSuccessMessage(''), 3000); // Clear message after 3 seconds
     }

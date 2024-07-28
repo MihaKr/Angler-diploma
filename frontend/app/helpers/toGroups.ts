@@ -1,15 +1,7 @@
-interface Container {
-    container_id: string
-    container_name: string
-    container_group: any
-}
 
-interface GroupedContainers {
-    key: string;
-    items: Container[];
-}
+import {Container, GroupedContainers} from "../types";
 
-function createGroupDict(items: Container[]): GroupedContainers[] {
+function  createGroupDict(items: Container[]): GroupedContainers[] {
     const dict: Record<string, Container[]> = {};
 
     items.forEach(item => {

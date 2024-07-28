@@ -1,5 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import dataPost from "@/app/components/dataPost";
+import dataPut from "@/app/components/dataPut";
 
 interface ArgObj {
     [key: number]: { args: string };
@@ -10,7 +11,6 @@ interface MyComponentProps {
     setcontArgs: React.Dispatch<React.SetStateAction<ArgObj>>;
     app_cont_id: string
     setShowModal? : React.Dispatch<React.SetStateAction<boolean>>;
-
 }
 
 const Config: React.FC<MyComponentProps> = ({ contArgs, setcontArgs, app_cont_id , setShowModal}) => {
@@ -30,6 +30,8 @@ const Config: React.FC<MyComponentProps> = ({ contArgs, setcontArgs, app_cont_id
             const formData = new FormData();
             formData.append('file', file);
             formData.append('app_container_id', app_cont_id);
+            console.log(formData)
+            console.log(app_cont_id)
 
             try {
                 const response = await dataPost(formData, `http://0.0.0.0:8000/angler_core/files`);
@@ -41,8 +43,9 @@ const Config: React.FC<MyComponentProps> = ({ contArgs, setcontArgs, app_cont_id
             setcontArgs(prevState => {
                 const newState = {
                     ...prevState,
-                    [app_cont_id]: { 'FILEPATH': file.name }
+                    [app_cont_id]: { 'FILEPATH': file.name, 'app_cont_id': String(app_cont_id)}
                 };
+                dataPut({ 'FILEPATH' : file.name, 'app_cont_id': String(app_cont_id)  }, `http://0.0.0.0:8000/angler_core/app_cont?app_cont_id=${app_cont_id}`);
                 console.log("Inside setState callback:", newState);
                 if (setShowModal) {
                     setShowModal(false)

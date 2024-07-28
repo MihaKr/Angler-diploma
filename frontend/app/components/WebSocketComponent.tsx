@@ -1,8 +1,5 @@
 import React, { useEffect, useState } from 'react';
-
-interface logProps {
-    check: any;
-}
+import {logProps} from "@/app/types";
 
 const WebSocketComponent: React.FC<logProps>  = ({ check }) => {
     const [message, setMessage] = useState<any>([]);

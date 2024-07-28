@@ -88,10 +88,17 @@ class AnglerListAppContView(APIView):
             return Response(serializer.data, status=status.HTTP_200_OK)
 
     def post(self, request, *args, **kwargs):
+        data_new = request.data
         serializer = AnglerAppContSerializer(data=request.data)
         if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
+            instance = serializer.save()
+            instance.arguments = {"app_cont_id": str(instance.app_container_id)}
+            instance.save()
+
+            response_data = serializer.data
+            response_data['arguments'] = {"app_cont_id":  str(instance.app_container_id)}
+
+            return Response(response_data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     def put(self, request, *args, **kwargs):
@@ -118,7 +125,7 @@ class AnglerListAppContView(APIView):
         elif args:
             if request.data['FILEPATH'] :
                 try:
-                    shutil.copyfile(request.data['FILEPATH'], '../docker_host/into_text.txt')
+                    shutil.copyfile(request.data['FILEPATH'], '/mnt/docker_host/into_text.txt')
                 except Exception as e:
                     print(f"Error occurred while copying and renaming file: {e}")
             args.arguments = request.data
@@ -239,26 +246,39 @@ class RunAppView(APIView):
         return Response({"message": "app_accepted"}, status=status.HTTP_200_OK)
 
 class FileView(APIView):
+    def put(self, request, *args, **kwargs):
+        serializer = FileSerializer(data=request.data)
+        if serializer.is_valid():
+            file = request.FILES.get('file')
+            name = request.data.get('name')
+
+            if not file or not name:
+                return Response({'error': 'File or name is missing'}, status=status.HTTP_400_BAD_REQUEST)
+
+            path = os.path.join('../containers', name)
+            if not os.path.exists(path):
+                os.makedirs(path)
+            destination_path = os.path.join(path, file.name)
+
+            with open(destination_path, 'wb+') as destination:
+                for chunk in file.chunks():
+                    destination.write(chunk)
+            return Response({'message': 'File uploaded successfully'}, status=status.HTTP_201_CREATED)
+
     def post(self, request, *args, **kwargs):
         serializer = FileSerializer(data=request.data)
-        print(serializer)
         if serializer.is_valid() or request.FILES['file'].content_type == 'text/x-python-script':
             if 'app_container_id' in request.data:
+                print('app_container_id not missing')
                 file_instance = serializer.save()
-                source_path = file_instance.file.path
-                #shutil.copy(source_path, '/mnt/docker_host/into_text.txt')
-
                 file = request.FILES.get('file')
-                name = request.data.get('name')
-
                 if file.name == 'into_text.conllu':
-                    destination_path = os.path.join('/mnt/docker_host/', 'into_text123.conllu')
-                    print('conl')
-
-                    with open(destination_path, 'wb+') as destination:
-                        for chunk in file.chunks():
-                            destination.write(chunk)
-                            print("printed")
+                    if request.data['store'] == 1:
+                        destination_path = os.path.join('/mnt/docker_host/', request.data['store_as'], '.conllu')
+                        with open(destination_path, 'wb+') as destination:
+                            for chunk in file.chunks():
+                                destination.write(chunk)
+                                print("printed")
 
                 return Response(serializer.data, status=status.HTTP_201_CREATED)
             else:

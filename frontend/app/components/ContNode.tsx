@@ -1,14 +1,7 @@
 import React, {useState} from 'react';
 import { Handle, Position, NodeResizer } from 'reactflow';
 import { number } from 'prop-types';
-
-interface AllContainersI {
-    app_container_id: number;
-    container_name: string;
-    container_id: number;
-    app_id: number;
-    position: { x: number, y: number };
-}
+import {AllContainersI} from "@/app/types";
 
 const ContNode = ({ data,}: { data: AllContainersI }) => {
     console.log(data);

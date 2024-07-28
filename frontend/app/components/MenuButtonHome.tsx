@@ -3,17 +3,7 @@ import Image from "next/image";
 import {useEffect, useState} from "react";
 import postData from "@/app/components/dataPost";
 import {useRouter} from "next/navigation";
-
-
-interface MenuButtonProps {
-    text: string
-    setShowModal? : React.Dispatch<React.SetStateAction<boolean>>;
-}
-
-type MyData = {
-    app_name: string;
-    owner: string;
-};
+import {MenuButtonProps} from "@/app/types";
 
 const RedirectToHome = () => {
     const router = useRouter();

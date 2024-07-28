@@ -3,16 +3,16 @@ from .models import Applications, ApplicationContainers, AllContainers, LinkCont
 class AnglerSerializer(serializers.ModelSerializer):
     class Meta:
         model = Applications
-        fields = ["app_id", "app_name", "owner", "date_created", "app_date_last_modified"]
+        fields = ["app_id", "app_name", "owner", "short_desc","date_created", "app_date_last_modified", "used_containers"]
 class AnglerAppContSerializer(serializers.ModelSerializer):
     class Meta:
         model = ApplicationContainers
-        fields = ["app_container_id", "container_id", "app_id", "position", "arguments"]
+        fields = ["app_container_id", "container_id", "app_id", "position", "arguments", "size"]
 
 class AllContainersSerializer(serializers.ModelSerializer):
     class Meta:
         model = AllContainers
-        fields = ["container_id", "container_name", "container_group"]
+        fields = ["container_id", "container_name", "container_group", "container_type"]
 
 class LinkContainersSerializer(serializers.ModelSerializer):
     class Meta:

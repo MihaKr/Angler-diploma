@@ -2,12 +2,9 @@ import Image from "next/image";
 import DataDisplayer from "@/app/ui/datadisplayer";
 import DataFetcher from "@/app/components/datafetcher";
 import React, { useState } from 'react';
+import {CenterMenuProps} from "@/app/types";
 
 
-interface CenterMenuProps {
-    apps: []
-    setApps: React.Dispatch<React.SetStateAction<any[]>>;
-}
 
 export const CenterMenu: React.FC<CenterMenuProps> = ({ apps, setApps }) => {
 

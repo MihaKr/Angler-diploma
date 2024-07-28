@@ -1,5 +1,4 @@
 'use client'
-
 import React, {useEffect, useState} from "react";
 import DataFetcher from "@/app/components/datafetcher";
 import postData from "@/app/components/dataPost";
@@ -17,34 +16,13 @@ import allContainers from "@/app/components/AllContainers";
 import dataFetch from "@/app/components/dataFetch";
 import Status from "@/app/components/Status";
 import WebSocketComponent from "@/app/components/WebSocketComponent";
-
-// pages/index.tsx
-
-interface AllContainersI {
-    app_container_id: number;
-    container_id: number;
-    app_id: number;
-    position: { x: number, y: number }
-}
-
-interface Container {
-    container_id: string
-    container_name: string
-    container_group: any
-}
-
-interface GroupedContainers {
-    key: string;
-    items: Container[];
-}
-
-interface ArgObj {
-    [key: number]: { args: string };
-}
+import {ArgObj, Container, GroupedContainers} from "@/app/types";
 
 export default function Page({ params }: { params: { app_id: number} }) {
     const [activeContainers, setActiveContainers] = useState<any>([]);
+    const [appData, setAppData] = useState<any>('');
     const [allContainers, setAllContainers] = useState<any>([]);
+    const [usedContainers, setUsedContainers] = useState<any>([]);
     const [edges, setEdges] = useState<any>([]);
     const [showModal, setShowModal] = useState(false);
     const [showModalNewContainer, setShowModalNewContainer] = useState(false);
@@ -54,6 +32,7 @@ export default function Page({ params }: { params: { app_id: number} }) {
     const [contConfigId, setContConfigId] = useState('');
     const [successMessage, setSuccessMessage] = useState<any>('');
     const [check, setCheck] = useState<any>('');
+    const [loading, setLoading] = useState(false);
 
     useEffect(() => {
         const updateActiveContainers = () => {
@@ -64,26 +43,43 @@ export default function Page({ params }: { params: { app_id: number} }) {
                 if (matchingContainer) {
                     return {
                         ...data,
-                        container_name: `${matchingContainer.container_name}` // Example mapping function
+                        container_name: `${matchingContainer.container_name}`,
+                        container_type: `${matchingContainer.container_type}`,
+                        text: 'just a temp',
                     };
                 }
-                console.log("data")
-                console.log(data)
                 return data;
             });
             setActiveContainers(updatedActiveContainers);
         };
         updateActiveContainers();
-        console.log(activeContainers)
     }, [allContainers]);
 
+    useEffect(() => {
+        const fetchData = async () => {
+            setLoading(true); // Set loading state to true before fetching
+            await dataFetch(setAppData, `http://127.0.0.1:8000/angler_core/api?id=${params.app_id}`);
+            setLoading(false); // Set loading state to false after fetching
+        };
 
-    let groups = createGroupDict(allContainers)
+        fetchData();
+    }, [allContainers, params.app_id]);
+
+    useEffect(() => {
+        if (!loading && appData.length > 0) {
+            console.log(appData);
+            setUsedContainers(appData[0].used_containers);
+        }
+    }, [appData, loading]);
+
+    console.log(allContainers)
 
 
-    //TODO dodaj en datafetch za vse containerje
-    //TODO on drag naredi duplikat in dodaj v state - kot svoj component
-    //TODO v backendu endpoint za vse containers
+    function filterContainersByGroup(containers: Container[], groups: string[]): Container[] {
+        return containers.filter(container => groups.includes(container.container_group));
+    }
+
+    let groups = createGroupDict(filterContainersByGroup(allContainers, usedContainers))
 
     return (
         <div className="flex flex-col h-screen overflow-hidden">
@@ -166,6 +162,8 @@ export default function Page({ params }: { params: { app_id: number} }) {
                             app_id={params.app_id}
                             successMessage={successMessage}
                             setSuccessMessage={setSuccessMessage}
+                            allContainers={allContainers}
+                            setAllContainers={setAllContainers}
                         />
                     </div>
                     {successMessage !== '' && (

@@ -1,17 +1,17 @@
 import React, { FC } from 'react';
-import DraggableComponent from './DraggableComponent';
 import ContNode from "@/app/components/ContNode"; // Adjust the import path accordingly
 
 interface ContainerButtonProps {
     container_id: string;
     container_name: string;
     drag_func: any;
+    type: string;
 }
 
-const ContainerButton: FC<ContainerButtonProps> = ({ container_id, container_name, drag_func }) => {
+const ContainerButton: FC<ContainerButtonProps> = ({ container_id, container_name, drag_func, type }) => {
 
     const onDragStart = (event: React.DragEvent<HTMLDivElement>, node: string) => {
-        event.dataTransfer.setData('application/reactflow', JSON.stringify({ node, container_id, container_name }));
+        event.dataTransfer.setData('application/reactflow', JSON.stringify({ node, container_id, container_name, type }));
         event.dataTransfer.effectAllowed = 'move';
     };
 

@@ -2,23 +2,7 @@
 import Image from "next/image";
 import {useEffect, useState} from "react";
 import postData from "@/app/components/dataPost";
-
-
-interface MenuButtonProps {
-    text: string
-    setShowModal? : React.Dispatch<React.SetStateAction<boolean>>;
-}
-
-type MyData = {
-    app_name: string;
-    owner: string;
-};
-
-const jsonData: MyData = {
-    app_name: "app_psot_next",
-    owner: "miha"
-};
-
+import {MenuButtonProps} from "@/app/types";
 const NewDoc = () => {
         //postData(jsonData)
 };

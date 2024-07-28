@@ -2,6 +2,7 @@
 
 import React from 'react';
 import {ApplicationButton} from "@/app/components/AppSelectionButton";
+import {it} from "node:test";
 
 const DataDisplayer: React.FC<{ data: any }> = ({ data }) => {
 
@@ -17,7 +18,7 @@ const DataDisplayer: React.FC<{ data: any }> = ({ data }) => {
                 </div>
                 {sortedData.slice(0, 9).map((item: any) => (
                     <div key={item.app_id} className="p-4">
-                        <ApplicationButton text={item.app_name} app_id={item.app_id} date_last_modified={item.app_date_last_modified}/>
+                        <ApplicationButton description={item.short_desc} text={item.app_name} app_id={item.app_id} date_last_modified={item.app_date_last_modified}/>
                     </div>
                 ))}
             </div>

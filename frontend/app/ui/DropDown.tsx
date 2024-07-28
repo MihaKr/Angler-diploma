@@ -5,20 +5,7 @@ import AllContainers from "@/app/components/AllContainers";
 
 import { PlusIcon } from '@heroicons/react/24/solid'
 import { MinusIcon } from "@heroicons/react/24/solid";
-
-interface Container {
-    container_id: string
-    container_name: string
-    container_group: any
-}
-
-
-interface DropDownProps {
-    allContainers: Container[];
-    setAllContainers? : React.Dispatch<React.SetStateAction<[]>>;
-    handleClickAllContainers?: any
-    group_name:string
-}
+import {DropDownProps} from "@/app/types";
 
 export const DropDown: React.FC<DropDownProps> = ({ allContainers, setAllContainers, handleClickAllContainers, group_name}) => {
     const [isExpanded, setIsExpanded] = useState(false);

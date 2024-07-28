@@ -1,3 +1,5 @@
+import os
+
 import requests
 
 def save_to_file(content, output_path):
@@ -6,8 +8,9 @@ def save_to_file(content, output_path):
     f.write(content["file_content"])
     f.close()
 
-url = 'http://backend:8000/angler_core/files?app_cont_id=6'
-payload = {'app_container_id': 'value1', 'key2': 'value2'}
+app_cont_id=os.getenv('APP_CONT_ID', '0')
+
+url = f'http://backend:8000/angler_core/files?app_cont_id={app_cont_id}'
 response = requests.get(url)
 
 data = response.json()

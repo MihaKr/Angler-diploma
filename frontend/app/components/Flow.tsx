@@ -30,27 +30,8 @@ import deleteData from "@/app/components/dataDelete";
 import {router} from "next/client";
 import postData from "@/app/components/dataPost";
 import {DragEndEvent} from "@dnd-kit/core";
-
-interface flowProps {
-    nodes: any;
-    setNodes: React.Dispatch<React.SetStateAction<any>>;
-    edges: any;
-    setEdges: React.Dispatch<React.SetStateAction<any>>;
-    app_id: number
-    setShowModal?: React.Dispatch<React.SetStateAction<boolean>>;
-    app_cont_id: string;
-    setApp_cont_id: React.Dispatch<React.SetStateAction<string>>;
-    conf_file: String;
-    setConfFile: React.Dispatch<React.SetStateAction<string>>;
-}
-
-interface edgeP {
-    app_id_link: number
-    origin: number
-    origin_edge: string
-    destination: number
-    destination_edge: string
-}
+import ContNodeResizable from "@/app/components/ContNodeResizable";
+import {edgeP, flowProps} from "@/app/types";
 
 let id = 0;
 
@@ -194,6 +175,7 @@ const Flow: React.FC<flowProps> = ({
     const get_new_id = async (node: any) => {
         const r = await postData(node.data, 'http://0.0.0.0:8000/angler_core/app_cont')
         node.data.app_container_id = r.app_container_id
+        node.data.arguments = r.arguments
         node.id = String(r.app_container_id)
         return node
     }
@@ -208,7 +190,7 @@ const Flow: React.FC<flowProps> = ({
         async (event: React.DragEvent<HTMLDivElement>) => {
             event.preventDefault();
 
-            const { nodeType, container_id, container_name } = JSON.parse(event.dataTransfer.getData('application/reactflow'));
+            const { nodeType, container_id, container_name, type } = JSON.parse(event.dataTransfer.getData('application/reactflow'));
 
 
             // project was renamed to screenToFlowPosition
@@ -221,7 +203,7 @@ const Flow: React.FC<flowProps> = ({
 
             const newNode = {
                 id: '0',
-                type: 'ContNode',
+                type: type,
                 position: {x:  Math.floor(position.x), y:  Math.floor(position.y)},
                 data: { app_container_id: 0,
                         app_id: `${app_id}`,
@@ -238,7 +220,7 @@ const Flow: React.FC<flowProps> = ({
         [screenToFlowPosition],
     );
 
-    const nodeTypes = { ContNode: ContNode };
+    const nodeTypes = { ContNode: ContNode , ContNodeResizable: ContNodeResizable };
 
     return (
         <div style={{ width: '100vw', height: '100vh' }}>

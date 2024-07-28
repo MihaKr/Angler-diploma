@@ -2,36 +2,7 @@
 import React, { useState, useEffect, Suspense, lazy } from 'react';
 import DataFetcher from "@/app/components/datafetcher";
 import DataFetch from "@/app/components/dataFetch";
-
-interface Container {
-    container_id: string
-    container_name: string
-    container_group: any
-}
-
-interface ArgObj {
-    [key: number]: { args: string };
-}
-
-interface TsContentProps {
-    setShowModal?: React.Dispatch<React.SetStateAction<boolean>>;
-    showModal: boolean;
-    contArgs: object
-    setcontArgs:React.Dispatch<React.SetStateAction<ArgObj>>;
-    app_cont_id: string;
-    setApp_cont_id:  React.Dispatch<React.SetStateAction<string>>;
-    conf_file: string;
-    setConfFile:  React.Dispatch<React.SetStateAction<string>>;
-
-}
-
-interface DynamicComponentProps {
-    contArgs: object
-    setcontArgs: React.Dispatch<React.SetStateAction<ArgObj>>
-    app_cont_id: string
-    setShowModal? : React.Dispatch<React.SetStateAction<boolean>>;
-
-}
+import {ArgObj, DynamicComponentProps, TsContentProps} from "@/app/types";
 
 export const TsContent: React.FC<TsContentProps> = ({ setShowModal, showModal, contArgs, setcontArgs,setConfFile, conf_file, setApp_cont_id, app_cont_id }) => {
     const [PageComponent, setPageComponent] = useState<React.ComponentType<DynamicComponentProps> | null>(null);
