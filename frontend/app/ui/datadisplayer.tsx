@@ -3,8 +3,9 @@
 import React from 'react';
 import {ApplicationButton} from "@/app/components/AppSelectionButton";
 import {it} from "node:test";
+import {MyDataCont} from "@/app/types";
 
-const DataDisplayer: React.FC<{ data: any }> = ({ data }) => {
+const DataDisplayer: React.FC<{ data: any, setData: any , showModal:boolean, setShowModal: React.Dispatch<React.SetStateAction<boolean>>, appValues: MyDataCont, setAppValues: React.Dispatch<React.SetStateAction<MyDataCont>>}> = ({ data, setData, setShowModal, showModal, setAppValues, appValues }) => {
 
     const sortedData = data.sort((a: any, b: any) => {
         return new Date(b.app_date_last_modified).getTime() - new Date(a.app_date_last_modified).getTime();
@@ -18,7 +19,8 @@ const DataDisplayer: React.FC<{ data: any }> = ({ data }) => {
                 </div>
                 {sortedData.slice(0, 9).map((item: any) => (
                     <div key={item.app_id} className="p-4">
-                        <ApplicationButton description={item.short_desc} text={item.app_name} app_id={item.app_id} date_last_modified={item.app_date_last_modified}/>
+                        <ApplicationButton description={item.short_desc} text={item.app_name} app_id={item.app_id} date_last_modified={item.app_date_last_modified} data={data} setData={setData}
+                                           showModal={showModal} setShowModal={setShowModal} setAppValues={setAppValues} appValues={appValues}/>
                     </div>
                 ))}
             </div>

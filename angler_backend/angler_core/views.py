@@ -27,8 +27,8 @@ class AnglerListApiView(APIView):
 
         if app_id_q:
             try:
-                app = Applications.objects.filter(app_id=app_id_q)
-                serializer = AnglerSerializer(app, many=True)
+                app = Applications.objects.filter(app_id=app_id_q)[0]
+                serializer = AnglerSerializer(app)
                 return Response(serializer.data, status=status.HTTP_200_OK)
             except ApplicationContainers.DoesNotExist:
                 return Response({"message": "Application Container not found"}, status=status.HTTP_404_NOT_FOUND)
@@ -49,6 +49,24 @@ class AnglerListApiView(APIView):
         app = Applications.objects.get(app_id=app_id_q)
 
         if app:
+            if request.data['edit'] == 1:
+                app.app_name = request.data['app_name']
+                app.short_desc = request.data['short_desc']
+                app.used_containers = request.data['used_containers']
+                settings.TIME_ZONE  # 'UTC'
+                format_string = '%Y-%m-%d %H:%M:%S'
+
+                naive_datetime = datetime.datetime.now()
+                new_date = make_aware(naive_datetime)
+
+                app.app_date_last_modified = new_date
+
+
+                app.save()
+
+                serializer = AnglerSerializer(app)
+                return Response(serializer.data, status=status.HTTP_200_OK)
+
             if request.data['new_date'] is not None:
                 settings.TIME_ZONE  # 'UTC'
                 format_string = '%Y-%m-%d %H:%M:%S'
@@ -270,7 +288,14 @@ class FileView(APIView):
         if serializer.is_valid() or request.FILES['file'].content_type == 'text/x-python-script':
             if 'app_container_id' in request.data:
                 print('app_container_id not missing')
-                file_instance = serializer.save()
+                try:
+                    obj = Files.objects.get(app_container_id=request.data["app_container_id"])
+                    obj.file=request.FILES['file']
+                    obj.save()
+                except Files.DoesNotExist:
+                    obj = Files(app_container_id=request.data["app_container_id"], file=request.FILES['file'])
+                    obj.save()
+
                 file = request.FILES.get('file')
                 if file.name == 'into_text.conllu':
                     if request.data['store'] == 1:
@@ -309,13 +334,14 @@ class FileView(APIView):
         if app_cont_id:
             try:
                 file_tmp = Files.objects.filter(app_container_id=app_cont_id).first()
-                document = get_object_or_404(Files, file_id=file_tmp.file_id)
-                file_path = document.file.path
-                with open(file_path, 'r') as file:
-                    file_content = file.read()
-                    return Response({'file_content': file_content}, status=status.HTTP_200_OK)
-
-                return Response(serializer.data, status=status.HTTP_200_OK)
+                if file_tmp:
+                    document = get_object_or_404(Files, file_id=file_tmp.file_id)
+                    file_path = document.file.path
+                    with open(file_path, 'r') as file:
+                        file_content = file.read()
+                        return Response({'file_content': file_content}, status=status.HTTP_200_OK)
+                else:
+                    return Response("", status=status.HTTP_200_OK)
             except ApplicationContainers.DoesNotExist:
                 return Response({"message": "Application Container not found"}, status=status.HTTP_404_NOT_FOUND)
 

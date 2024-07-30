@@ -1,8 +1,0 @@
-# text = Testiranje procesorja tokenize v aplikaciji
-# sent_id = 0
-1	Testiranje	_	_	_	_	0	_	_	start_char=0|end_char=10
-2	procesorja	_	_	_	_	1	_	_	start_char=11|end_char=21
-3	tokenize	_	_	_	_	2	_	_	start_char=22|end_char=30
-4	v	_	_	_	_	3	_	_	start_char=31|end_char=32
-5	aplikaciji	_	_	_	_	4	_	_	SpaceAfter=No|start_char=33|end_char=43
-

@@ -1,8 +1,0 @@
-# text = Obama was born in hawaii
-# sent_id = 0
-1	Obama	Obama	PROPN	NNP	Number=Sing	3	nsubj:pass	_	start_char=0|end_char=5
-2	was	be	AUX	VBD	Mood=Ind|Number=Sing|Person=3|Tense=Past|VerbForm=Fin	3	aux:pass	_	start_char=6|end_char=9
-3	born	bear	VERB	VBN	Tense=Past|VerbForm=Part|Voice=Pass	0	root	_	start_char=10|end_char=14
-4	in	in	ADP	IN	_	5	case	_	start_char=15|end_char=17
-5	hawaii	hawaii	PROPN	NNP	Number=Sing	3	obl	_	SpaceAfter=No|start_char=18|end_char=24
-

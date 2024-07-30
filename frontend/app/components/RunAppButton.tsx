@@ -37,11 +37,12 @@ const RunAppButton: FC<ContainerButtonProps> = ({ app_id, successMessage, setSuc
             .then(data => {
                 setSuccessMessage('App run finished!');
                 setTimeout(() => setSuccessMessage(''), 3000); // Clear message after 3 seconds
+                updateAttributeForAll();
+
             })
             .catch(error => {
                 console.error('There was a problem with the fetch operation:', error);
             });
-            updateAttributeForAll();
 
             console.log(allContainers)
 

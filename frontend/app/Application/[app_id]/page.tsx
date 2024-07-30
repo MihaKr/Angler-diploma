@@ -33,6 +33,7 @@ export default function Page({ params }: { params: { app_id: number} }) {
     const [successMessage, setSuccessMessage] = useState<any>('');
     const [check, setCheck] = useState<any>('');
     const [loading, setLoading] = useState(false);
+    const [groups, setGroups] = useState<any>([]);
 
     useEffect(() => {
         const updateActiveContainers = () => {
@@ -57,29 +58,42 @@ export default function Page({ params }: { params: { app_id: number} }) {
 
     useEffect(() => {
         const fetchData = async () => {
-            setLoading(true); // Set loading state to true before fetching
-            await dataFetch(setAppData, `http://127.0.0.1:8000/angler_core/api?id=${params.app_id}`);
-            setLoading(false); // Set loading state to false after fetching
+            try {
+                setLoading(true);
+                await dataFetch(setAppData, `http://127.0.0.1:8000/angler_core/api?id=${params.app_id}`);
+            } catch (error) {
+                console.error("Error fetching data:", error);
+            } finally {
+                setLoading(false);
+            }
         };
 
         fetchData();
-    }, [allContainers, params.app_id]);
+    }, [params.app_id]);
 
     useEffect(() => {
-        if (!loading && appData.length > 0) {
-            console.log(appData);
-            setUsedContainers(appData[0].used_containers);
+        if (!loading && appData && appData.used_containers) {
+            setUsedContainers(appData.used_containers);
         }
     }, [appData, loading]);
 
-    console.log(allContainers)
+    useEffect(() => {
+        console.log(groups)
+        console.log(appData)
 
+        if (appData && appData.used_containers) {
+            const usedContainers = appData.used_containers;
 
-    function filterContainersByGroup(containers: Container[], groups: string[]): Container[] {
-        return containers.filter(container => groups.includes(container.container_group));
-    }
+            const filterContainersByGroup = (containers: any, groups: string) => {
+                return containers.filter((container: any) => groups.includes(container.container_group));
+            };
 
-    let groups = createGroupDict(filterContainersByGroup(allContainers, usedContainers))
+            const filteredContainers = filterContainersByGroup(allContainers, usedContainers);
+            const newGroups = createGroupDict(filteredContainers);
+
+            setGroups(newGroups);
+        }
+    }, [allContainers, createGroupDict, appData]);
 
     return (
         <div className="flex flex-col h-screen overflow-hidden">

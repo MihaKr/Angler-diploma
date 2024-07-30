@@ -1,8 +1,0 @@
-# text = Obama was born in hawaii
-# sent_id = 0
-1	Obama	_	_	_	_	0	_	_	start_char=0|end_char=5
-2	was	_	_	_	_	1	_	_	start_char=6|end_char=9
-3	born	_	_	_	_	2	_	_	start_char=10|end_char=14
-4	in	_	_	_	_	3	_	_	start_char=15|end_char=17
-5	hawaii	_	_	_	_	4	_	_	SpaceAfter=No|start_char=18|end_char=24
-

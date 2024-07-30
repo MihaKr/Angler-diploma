@@ -6,13 +6,13 @@ import {CenterMenuProps} from "@/app/types";
 
 
 
-export const CenterMenu: React.FC<CenterMenuProps> = ({ apps, setApps }) => {
+export const CenterMenu: React.FC<CenterMenuProps> = ({ apps, setApps, setShowModal, showModal, appValues, setAppValues }) => {
 
     return (
-        <div className=""> {/* Change justify-end to justify-start */}
+        <div className="">
             <div className="">
                 <DataFetcher url="http://127.0.0.1:8000/angler_core/api" setData={setApps} />
-                <DataDisplayer data={apps} />
+                <DataDisplayer data={apps} setData={setApps} showModal={showModal} setShowModal={setShowModal} appValues={appValues} setAppValues={setAppValues}/>
             </div>
         </div>
     );

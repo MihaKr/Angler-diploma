@@ -155,7 +155,6 @@ export const AddNewContainerModal: React.FC<AddNewContainerModalProps> = ({ show
                             <input
                                 type="radio"
                                 id="ContNode"
-                                name="nodeType"
                                 value="ContNode"
                                 checked={nodeType === 'ContNode'}
                                 onChange={setRadio}
@@ -164,7 +163,6 @@ export const AddNewContainerModal: React.FC<AddNewContainerModalProps> = ({ show
                             <input
                                 type="radio"
                                 id="ContNodeResizable"
-                                name="nodeType"
                                 value="ContNodeResizable"
                                 checked={nodeType === 'ContNodeResizable'}
                                 onChange={setRadio}

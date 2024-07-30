@@ -4,7 +4,6 @@ import { number } from 'prop-types';
 import {AllContainersI} from "@/app/types";
 
 const ContNode = ({ data,}: { data: AllContainersI }) => {
-    console.log(data);
     const [resizable, setResizable] = useState(false);
 
     return (

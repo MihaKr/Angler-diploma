@@ -18,7 +18,7 @@ const ContNodeResizable = ({ data}: { data: AllContainersI}) => {
                 console.error("Error fetching data:", error);
             }
         };
-
+        console.log()
         fetchData();
     }, [data.text]);
 
@@ -29,8 +29,9 @@ const ContNodeResizable = ({ data}: { data: AllContainersI}) => {
                 <NodeResizer isVisible={resizable} minWidth={180} minHeight={100} />
                 <div>
                     <div>{data.app_container_id}</div>
+                    <div>{data.text}</div>
                     {fileData && (
-                        <div style={{ whiteSpace: 'pre-wrap', wordBreak: 'break-word' }}>
+                        <div style={{whiteSpace: 'pre-wrap', wordBreak: 'break-word'}}>
                             {fileData}
                         </div>
                     )}

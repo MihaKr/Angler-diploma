@@ -14,5 +14,5 @@ RUN pip install requests
 COPY store.py store.py
 #COPY stanza_resources '/root/stanza_resources'
 
-#ENTRYPOINT ["python", "./store.py"]
-CMD ["tail", "-f", "/dev/null"]
+ENTRYPOINT ["python", "./store.py"]
+#CMD ["tail", "-f", "/dev/null"]

@@ -48,6 +48,7 @@ export type MyDataCont = {
     used_containers: string;
     short_desc: string;
     date_last_modified: any
+    edit: number
 };
 
 export interface AllContainerProps {
@@ -66,6 +67,12 @@ export interface AppSelectionButtonProps {
     app_id: Number
     date_last_modified: Date
     description: string
+    data: any
+    setData: any
+    setShowModal: React.Dispatch<React.SetStateAction<boolean>>;
+    showModal: boolean;
+    appValues: MyDataCont;
+    setAppValues: React.Dispatch<React.SetStateAction<MyDataCont>>;
 }
 
 export interface AllContainersI {
@@ -85,6 +92,16 @@ export interface CreateAppFormModalProps {
     apps: []
     setApps: React.Dispatch<React.SetStateAction<any[]>>;
     groups: any[];
+}
+
+export interface EditAppFormModalProps {
+    showModal: boolean;
+    setShowModal? : React.Dispatch<React.SetStateAction<boolean>>;
+    apps: []
+    setApps: React.Dispatch<React.SetStateAction<any[]>>;
+    groups: any[];
+    appValues: MyDataCont;
+    setAppValues: React.Dispatch<React.SetStateAction<MyDataCont>>;
 }
 
 export interface flowProps {
@@ -146,6 +163,10 @@ export interface logProps {
 export interface CenterMenuProps {
     apps: []
     setApps: React.Dispatch<React.SetStateAction<any[]>>;
+    showModal: boolean;
+    setShowModal: React.Dispatch<React.SetStateAction<boolean>>;
+    appValues: MyDataCont;
+    setAppValues: React.Dispatch<React.SetStateAction<MyDataCont>>;
 }
 
 export interface edge {

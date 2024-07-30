@@ -60,7 +60,8 @@ export const CreateAppFormModal: React.FC<CreateAppFormModalProps> = ({ showModa
             short_desc: appDesc,
             used_containers: filteredStrings.join(","),
             owner: "miha",
-            date_last_modified: 0
+            date_last_modified: 0,
+            edit:0
         };
 
         let new_app = await get_new_id(data)
@@ -133,8 +134,8 @@ export const CreateAppFormModal: React.FC<CreateAppFormModalProps> = ({ showModa
                             <label className="text-sm font-medium text-gray-700">
                                 Choose Groups
                             </label>
-                            {arr.slice(0, 9).map((item: any, index: number) => (
-                                <div className="items-center space-x-2">
+                            {arr.slice().map((item: any, index: number) => (
+                                <div key={index} className="items-center space-x-2">
                                     <input type="checkbox" id="selectedCont" name={item}
                                            onChange={() => handleOnChange(arr.indexOf(item))}
                                            value={item} key={item} className="h-4 w-4 px-1">
