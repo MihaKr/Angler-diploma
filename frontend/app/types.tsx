@@ -31,7 +31,6 @@ export interface AddNewContainerModalProps {
     setAllContainers: React.Dispatch<React.SetStateAction<any[]>>;
     successMessage: any;
     setSuccessMessage: React.Dispatch<React.SetStateAction<String>>;
-
 }
 
 export type MyData = {
@@ -128,6 +127,7 @@ export interface edgeP {
 export interface MenuButtonProps {
     text: string
     setShowModal? : React.Dispatch<React.SetStateAction<boolean>>;
+    setShowModalContCreate? : React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 export interface ContainerButtonProps {

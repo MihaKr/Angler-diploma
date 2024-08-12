@@ -8,8 +8,7 @@ export const Footer: React.FC<MenuButtonProps> = ({ setShowModal}) => {
 
     return (
         <footer
-            className="flex flex-col items-center bg-zinc-50 text-center text-surface dark:bg-neutral-700 dark:text-white lg:text-left">
-            <div className="container p-6">
+            className="flex flex-col items-center bg-zinc-50 text-center text-surface dark:bg-neutral-700 dark:text-white lg:text-left fixed bottom-0 w-full">            <div className="container p-6">
                 <div className="grid gap-4 lg:grid-cols-2">
                     <div className="mb-6 md:mb-0">
                         <h5 className="mb-2 font-medium uppercase">Footer text</h5>

@@ -3,10 +3,6 @@ import {defaultCoordinates, DndContext, DragEndEvent, DragStartEvent, Translate,
 import {Coordinates, CSS} from '@dnd-kit/utilities';
 import styles from "./DraggableComponent.module.css";
 import ContainerButton from "@/app/components/ContainerButton";
-import containerButton from "@/app/components/ContainerButton";
-import allContainers from "@/app/components/AllContainers";
-import {number} from "prop-types";
-import dataPut from "@/app/components/dataPut";
 import {createSnapModifier} from "@dnd-kit/modifiers";
 import {type} from "node:os";
 import {AllContainerProps, AllContainers} from "@/app/types";

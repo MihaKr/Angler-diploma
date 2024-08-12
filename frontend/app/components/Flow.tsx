@@ -60,7 +60,8 @@ const Flow: React.FC<flowProps> = ({
             console.log(nodes)
 
             let x = {
-                new_date: new Date().toISOString().slice(0, 19).replace('T', ' ')
+                new_date: new Date().toISOString().slice(0, 19).replace('T', ' '),
+                edit: 2
             }
             dataPut(x, `http://127.0.0.1:8000/angler_core/api?id=${app_id}`)
         },

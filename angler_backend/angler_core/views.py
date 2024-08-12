@@ -143,7 +143,7 @@ class AnglerListAppContView(APIView):
         elif args:
             if request.data['FILEPATH'] :
                 try:
-                    shutil.copyfile(request.data['FILEPATH'], '/mnt/docker_host/into_text.txt')
+                    shutil.copyfile(os.path.join(os.path.dirname(os.path.dirname(__file__)),'media/documents/',request.data['FILEPATH']), 'mnt/docker_host/into_text.txt')
                 except Exception as e:
                     print(f"Error occurred while copying and renaming file: {e}")
             args.arguments = request.data
@@ -299,11 +299,14 @@ class FileView(APIView):
                 file = request.FILES.get('file')
                 if file.name == 'into_text.conllu':
                     if request.data['store'] == 1:
-                        destination_path = os.path.join('/mnt/docker_host/', request.data['store_as'], '.conllu')
-                        with open(destination_path, 'wb+') as destination:
-                            for chunk in file.chunks():
-                                destination.write(chunk)
-                                print("printed")
+                        if request.data['filetype'] == 'Conllu':
+                            destination_path = os.path.join('/mnt/docker_host/', request.data['store_as'], '.conllu')
+                        elif request.data['filetype'] == 'JSON':
+                            destination_path = os.path.join('/mnt/docker_host/', request.data['store_as'], '.txt')
+                    with open(destination_path, 'wb+') as destination:
+                        for chunk in file.chunks():
+                            destination.write(chunk)
+                            print("printed")
 
                 return Response(serializer.data, status=status.HTTP_201_CREATED)
             else:

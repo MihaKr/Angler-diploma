@@ -17,6 +17,7 @@ import dataFetch from "@/app/components/dataFetch";
 import Status from "@/app/components/Status";
 import WebSocketComponent from "@/app/components/WebSocketComponent";
 import {ArgObj, Container, GroupedContainers} from "@/app/types";
+import StopAppButton from "@/app/components/StopAppButton";
 
 export default function Page({ params }: { params: { app_id: number} }) {
     const [activeContainers, setActiveContainers] = useState<any>([]);
@@ -97,14 +98,6 @@ export default function Page({ params }: { params: { app_id: number} }) {
 
     return (
         <div className="flex flex-col h-screen overflow-hidden">
-            <AddNewContainerModal
-                showModal={showModalNewContainer}
-                setShowModal={setShowModalNewContainer}
-                allContainers={allContainers}
-                setAllContainers={setAllContainers}
-                setSuccessMessage={setSuccessMessage}
-                successMessage={setSuccessMessage}
-            />
             <div className="max-w">
                 <SideMenu setShowModal={setShowModal}/>
             </div>
@@ -171,22 +164,34 @@ export default function Page({ params }: { params: { app_id: number} }) {
                         setConfFile={setContConfigId}
                         conf_file={contConfigId}
                     />
-                    <div className="z-30 inline-block w-[90%] whitespace-nowrap">
-                        <RunAppButton
-                            app_id={params.app_id}
-                            successMessage={successMessage}
-                            setSuccessMessage={setSuccessMessage}
-                            allContainers={allContainers}
-                            setAllContainers={setAllContainers}
-                        />
+                    <div className="flex justify-center space-x-4 ">
+                        <div className="z-30 inline-block w-[90%] whitespace-nowrap">
+                            <RunAppButton
+                                app_id={params.app_id}
+                                successMessage={successMessage}
+                                setSuccessMessage={setSuccessMessage}
+                                allContainers={allContainers}
+                                setAllContainers={setAllContainers}
+                            />
+                        </div>
+                        <div className="z-30 inline-block w-[90%] whitespace-nowrap">
+                            <StopAppButton
+                                app_id={params.app_id}
+                                successMessage={successMessage}
+                                setSuccessMessage={setSuccessMessage}
+                                allContainers={allContainers}
+                                setAllContainers={setAllContainers}
+                            />
+                        </div>
                     </div>
                     {successMessage !== '' && (
                         <div className="mt-4 text-green-600 text-center">{successMessage}</div>
                     )}
                 </div>
             </div>
-            <div className="fixed inset-x-0 bottom-0 min-h-[20%] max-h-[20%] overflow-y-auto rounded-2xl p-4">
+            <div className="fixed inset-x-0 bottom-0 min-h-[25%] max-h-[20%] overflow-y-auto rounded-2xl p-4">
                 <div>Debug Log</div>
+                <WebSocketComponent check={successMessage}/>
             </div>
         </div>
 

@@ -1,11 +1,13 @@
 import Image from "next/image";
 import {MenuButton} from "@/app/components/MenuButton";
 import {MenuButtonHome} from "@/app/components/MenuButtonHome";
+import {PluginButton} from "@/app/components/PluginButton";
 interface MenuButtonProps {
     setShowModal? : React.Dispatch<React.SetStateAction<boolean>>;
+    setShowModalContCreate? : React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-export const SideMenu: React.FC<MenuButtonProps> = ({ setShowModal}) => {
+export const SideMenu: React.FC<MenuButtonProps> = ({ setShowModal, setShowModalContCreate}) => {
 
     return (
             <div className="flex justify-between items-center bg-side-menu_gray p-4 w-full">
@@ -21,6 +23,7 @@ export const SideMenu: React.FC<MenuButtonProps> = ({ setShowModal}) => {
                     <MenuButton text={"Open document"}/>
                     <MenuButton text={"Recent files"}/>
                     <MenuButton text={"Tutorials document"}/>
+                    <PluginButton setShowModalContCreate={setShowModalContCreate} text={"New plugin"}/>
 
                 </div>
             </div>

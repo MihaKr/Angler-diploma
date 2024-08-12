@@ -30,8 +30,6 @@ const Config: React.FC<MyComponentProps> = ({ contArgs, setcontArgs, app_cont_id
             const formData = new FormData();
             formData.append('file', file);
             formData.append('app_container_id', app_cont_id);
-            console.log(formData)
-            console.log(app_cont_id)
 
             try {
                 const response = await dataPost(formData, `http://0.0.0.0:8000/angler_core/files`);
