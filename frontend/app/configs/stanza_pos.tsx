@@ -15,7 +15,7 @@ interface MyComponentProps {
 const Config: React.FC<MyComponentProps> = ({ contArgs, setcontArgs, app_cont_id, setShowModal }) => {
     const [selectedValue, setSelectedValue] = useState('');
 
-    const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const handleChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
         setSelectedValue(event.target.value);
     };
 
@@ -23,6 +23,7 @@ const Config: React.FC<MyComponentProps> = ({ contArgs, setcontArgs, app_cont_id
     }, [contArgs]);
 
     function save() {
+        let filePath='1'
         setcontArgs(prevState => {
             const newState = {
                 ...prevState,
