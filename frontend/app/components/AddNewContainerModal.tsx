@@ -1,20 +1,19 @@
-import React, {FC, FormEvent, MouseEventHandler, useState} from 'react';
+import React, { FC, FormEvent, useState } from 'react';
 import postData from "@/app/components/dataPost";
-import {AddNewContainerModalProps, MyData} from "@/app/types";
+import { AddNewContainerModalProps, MyData } from "@/app/types";
 declare module "react" {
     interface InputHTMLAttributes<T> extends HTMLAttributes<T> {
         webkitdirectory?: string;
     }
 }
 
-export const AddNewContainerModal: React.FC<AddNewContainerModalProps> = ({ showModal, setShowModal, allContainers, setAllContainers, successMessage, setSuccessMessage}) => {
+export const AddNewContainerModal: React.FC<AddNewContainerModalProps> = ({ showModal, setShowModal, allContainers, setAllContainers, successMessage, setSuccessMessage }) => {
     const [containerName, setContainerName] = useState("");
     const [containerGroup, SetContainerGroup] = useState("");
     const [containerPath, setContainerPath] = useState("");
     const [containerFolder, setContainerFolder] = useState<FileList | null>(null);
     const [nodeType, setNodeType] = useState('');
-
-
+    const [errors, setErrors] = useState<{ [key: string]: string }>({});
 
     function handleFileChange(e: React.ChangeEvent<HTMLInputElement>) {
         if (e.target.files) {
@@ -30,8 +29,40 @@ export const AddNewContainerModal: React.FC<AddNewContainerModalProps> = ({ show
         }
     };
 
+    const validateForm = () => {
+        let valid = true;
+        const newErrors: { [key: string]: string } = {};
+
+        if (!containerName) {
+            valid = false;
+            newErrors.containerName = "Container name is required.";
+        }
+
+        if (!containerGroup) {
+            valid = false;
+            newErrors.containerGroup = "Container group is required.";
+        }
+
+        if (!containerFolder || containerFolder.length === 0) {
+            valid = false;
+            newErrors.containerFolder = "A folder must be selected.";
+        }
+
+        if (!nodeType) {
+            valid = false;
+            newErrors.nodeType = "Please select a node type.";
+        }
+
+        setErrors(newErrors);
+        return valid;
+    };
+
     async function onSubmit(event: FormEvent<HTMLFormElement>) {
         event.preventDefault();
+
+        if (!validateForm()) {
+            return;
+        }
 
         const data: MyData = {
             container_name: containerName,
@@ -61,7 +92,6 @@ export const AddNewContainerModal: React.FC<AddNewContainerModalProps> = ({ show
                     container_name: containerName,
                     container_group: containerGroup,
                     container_type: nodeType
-
                 }
             ]);
 
@@ -75,7 +105,6 @@ export const AddNewContainerModal: React.FC<AddNewContainerModalProps> = ({ show
         }
     }
 
-
     function AppTyped(e: React.ChangeEvent<HTMLInputElement>) {
         setContainerName(e.target.value);
     }
@@ -87,7 +116,6 @@ export const AddNewContainerModal: React.FC<AddNewContainerModalProps> = ({ show
     function setRadio(e: React.ChangeEvent<HTMLInputElement>) {
         setNodeType(e.target.value);
     }
-
 
     return (
         <dialog open={showModal} className="modal z-50">
@@ -118,7 +146,9 @@ export const AddNewContainerModal: React.FC<AddNewContainerModalProps> = ({ show
                                 value={containerName}
                                 onChange={AppTyped}
                                 className="mt-1 block w-full border border-gray-300 rounded-md p-2 focus:ring focus:ring-blue-500"
+                                required
                             />
+                            {errors.containerName && <p className="text-red-500 text-sm mt-1">{errors.containerName}</p>}
                         </div>
                         <div>
                             <label
@@ -133,7 +163,9 @@ export const AddNewContainerModal: React.FC<AddNewContainerModalProps> = ({ show
                                 value={containerGroup}
                                 onChange={groupType}
                                 className="mt-1 block w-full border border-gray-300 rounded-md p-2 focus:ring focus:ring-blue-500"
+                                required
                             />
+                            {errors.containerGroup && <p className="text-red-500 text-sm mt-1">{errors.containerGroup}</p>}
                         </div>
                         <div>
                             <label
@@ -148,25 +180,30 @@ export const AddNewContainerModal: React.FC<AddNewContainerModalProps> = ({ show
                                 webkitdirectory="true"
                                 onChange={handleFileChange}
                                 className="mt-1 block w-full border border-gray-300 rounded-md p-2 focus:ring focus:ring-blue-500"
+                                required
                             />
+                            {errors.containerFolder && <p className="text-red-500 text-sm mt-1">{errors.containerFolder}</p>}
                         </div>
                         <div className="flex items-center space-x-4">
-                            <label htmlFor="ContNode">Regular Node</label><br/>
+                            <label htmlFor="ContNode">Regular Node</label><br />
                             <input
                                 type="radio"
                                 id="ContNode"
                                 value="ContNode"
                                 checked={nodeType === 'ContNode'}
                                 onChange={setRadio}
+                                required
                             />
-                            <label htmlFor="ContNodeResizable">View Node</label><br/><br/>
+                            <label htmlFor="ContNodeResizable">View Node</label><br /><br />
                             <input
                                 type="radio"
                                 id="ContNodeResizable"
                                 value="ContNodeResizable"
                                 checked={nodeType === 'ContNodeResizable'}
                                 onChange={setRadio}
+                                required
                             />
+                            {errors.nodeType && <p className="text-red-500 text-sm mt-1">{errors.nodeType}</p>}
                         </div>
                         <div>
                             <button

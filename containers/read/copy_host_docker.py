@@ -10,7 +10,9 @@ def save_to_file(content, output_path):
 
 app_cont_id=os.getenv('APP_CONT_ID', '0')
 
-url = f'http://backend:8000/angler_core/files?app_cont_id={app_cont_id}'
+#url = f'http://0.0.0.0:8000/angler_core/files?app_cont_id={app_cont_id}'
+url = f'http://host.docker.internal:8000/angler_core/files?app_cont_id={app_cont_id}'
+
 response = requests.get(url)
 
 data = response.json()

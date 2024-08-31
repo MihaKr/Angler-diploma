@@ -78,13 +78,13 @@ def build_images(list_cont):
         for chunk in logs:
             if 'stream' in chunk:
                 for line in chunk['stream'].splitlines():
-                    async_to_sync(channel_layer.group_send)(
+                    '''async_to_sync(channel_layer.group_send)(
                         'angler_log',
                         {
                             'type': 'angler_log_message',
                             'message': '[' + datetime.now().strftime("%m/%d/%Y %H:%M:%S") + '] ' + line
                         }
-                    )
+                    )'''
     return images
 
 
@@ -106,21 +106,21 @@ def run_containers(list_img):
                 abc = container.logs().decode('utf-8')
                 if 'abc_old' in locals():
                     if abc != abc_old:
-                        async_to_sync(channel_layer.group_send)(
+                        '''async_to_sync(channel_layer.group_send)(
                             'angler_log',
                             {
                                 'type': 'angler_log_message',
                                 'message': '[' + datetime.now().strftime("%m/%d/%Y %H:%M:%S") + '] ' + abc
                             }
-                        )
+                        )'''
                 else:
-                    async_to_sync(channel_layer.group_send)(
+                        '''                    async_to_sync(channel_layer.group_send)(
                         'angler_log',
                         {
                             'type': 'angler_log_message',
                             'message': '[' + datetime.now().strftime("%m/%d/%Y %H:%M:%S") + '] ' + abc
                         }
-                    )
+                    )'''
                 time.sleep(2)
                 abc_old = container.logs().decode('utf-8')
                 container.reload()
@@ -135,16 +135,16 @@ def delete_cont(list_cont):
 
 def run_app_func(id):
     start = time.time()
+    print(start)
+    #channel_layer = get_channel_layer()
 
-    channel_layer = get_channel_layer()
-
-    async_to_sync(channel_layer.group_send)(
+    '''async_to_sync(channel_layer.group_send)(
         'angler_log',
         {
             'type': 'angler_log_message',
             'message': '[' + datetime.now().strftime("%m/%d/%Y %H:%M:%S") + '] ' + 'RUN STARTED'
         }
-    )
+    )'''
 
     a,b = getLinks(id)
     print(a)
@@ -164,10 +164,10 @@ def run_app_func(id):
 
     delete_cont(list_of_run)
 
-    end = time.time()
-    length = end - start
+    #end = time.time()
+    #length = end - start
 
-    async_to_sync(channel_layer.group_send)(
+    '''async_to_sync(channel_layer.group_send)(
         'angler_log',
         {
             'type': 'angler_log_message',
@@ -175,11 +175,11 @@ def run_app_func(id):
         }
     )
 
-    async_to_sync(channel_layer.group_send)(
+   async_to_sync(channel_layer.group_send)(
         'angler_log',
         {
             'type': 'angler_log_message',
             'message': '[' + datetime.now().strftime("%m/%d/%Y %H:%M:%S") + '] ' + 'TIME TAKEN: ' + str(length) + ' seconds'
         }
-    )
+    )'''
 

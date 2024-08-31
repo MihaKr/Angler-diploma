@@ -1,24 +1,22 @@
-import React, {FC, FormEvent, MouseEventHandler, useEffect, useState} from 'react';
+import React, { FC, FormEvent, useEffect, useState } from 'react';
 import postData from "@/app/components/dataPost";
 import dateConvert from "@/app/helpers/dateHelper";
-import {CreateAppFormModalProps, MyDataCont} from "@/app/types";
-import {gray} from "d3-color";
-import {ApplicationButton} from "@/app/components/AppSelectionButton";
+import { CreateAppFormModalProps, MyDataCont } from "@/app/types";
 
 export const CreateAppFormModal: React.FC<CreateAppFormModalProps> = ({ showModal, setShowModal, apps, setApps, groups }) => {
     const [appTitle, setAppTitle] = useState("");
     const [appDesc, setAppDesc] = useState("");
+    const [errors, setErrors] = useState<{ [key: string]: string }>({});
 
     const handleClickBackground: React.MouseEventHandler<HTMLDivElement> = (event) => {
-        if((event.target as HTMLDivElement).id == 'background-modal') {
+        if ((event.target as HTMLDivElement).id === 'background-modal') {
             if (setShowModal) {
-                setShowModal(false)
+                setShowModal(false);
             }
         }
     };
 
-    const arr:any = groups.map(item => item.key);
-
+    const arr: any = groups.map(item => item.key);
 
     const [checkedState, setCheckedState] = useState(
         new Array(arr.length).fill(false)
@@ -34,23 +32,47 @@ export const CreateAppFormModal: React.FC<CreateAppFormModalProps> = ({ showModa
             index === position ? !item : item
         );
         setCheckedState(updatedCheckedState);
-    }
+    };
 
+    const validateForm = () => {
+        let valid = true;
+        const newErrors: { [key: string]: string } = {};
+
+        if (!appTitle) {
+            valid = false;
+            newErrors.appTitle = "App name is required.";
+        }
+
+        if (!appDesc) {
+            valid = false;
+            newErrors.appDesc = "Description is required.";
+        }
+
+        if (!checkedState.some(Boolean)) {
+            valid = false;
+            newErrors.groups = "At least one group must be selected.";
+        }
+
+        setErrors(newErrors);
+        return valid;
+    };
 
     const get_new_id = async (data: any) => {
-        const r = await postData(data,'http://127.0.0.1:8000/angler_core/api')
+        const r = await postData(data, 'http://127.0.0.1:8000/angler_core/api');
 
-        data.app_id = r.app_id
-        data.date_last_modified = dateConvert(r.date_last_modified)
-        return data
-    }
-
+        data.app_id = r.app_id;
+        data.date_last_modified = dateConvert(r.date_last_modified);
+        return data;
+    };
 
     async function onSubmit(event: FormEvent<HTMLFormElement>) {
         event.preventDefault();
 
-        const filteredStrings: string[] = arr.filter((_:any, index:number) => {
-            console.log(`Index: ${index}, Boolean Value: ${checkedState[index]}`);
+        if (!validateForm()) {
+            return;
+        }
+
+        const filteredStrings: string[] = arr.filter((_: any, index: number) => {
             return checkedState[index];
         });
 
@@ -61,16 +83,14 @@ export const CreateAppFormModal: React.FC<CreateAppFormModalProps> = ({ showModa
             used_containers: filteredStrings.join(","),
             owner: "miha",
             date_last_modified: 0,
-            edit:0
+            edit: 0
         };
 
-        let new_app = await get_new_id(data)
-
-        console.log(new_app)
+        let new_app = await get_new_id(data);
 
         setApps((nds: any[]) => nds.concat(new_app));
-        setAppTitle("")
-        setAppDesc("")
+        setAppTitle("");
+        setAppDesc("");
 
         // @ts-ignore
         setShowModal(false);
@@ -102,33 +122,37 @@ export const CreateAppFormModal: React.FC<CreateAppFormModalProps> = ({ showModa
                     <form className="space-y-4" onSubmit={onSubmit}>
                         <div>
                             <label
-                                htmlFor="container-name"
+                                htmlFor="app-name"
                                 className="block text-sm font-medium text-gray-700"
                             >
                                 App Name
                             </label>
                             <input
-                                id="container-name"
+                                id="app-name"
                                 type="text"
                                 value={appTitle}
                                 onChange={AppTyped}
                                 className="mt-1 block w-full border border-gray-300 rounded-md p-2 focus:ring focus:ring-blue-500"
+                                required
                             />
+                            {errors.appTitle && <p className="text-red-500 text-sm mt-1">{errors.appTitle}</p>}
                         </div>
                         <div>
                             <label
-                                htmlFor="container-desc"
+                                htmlFor="app-desc"
                                 className="block text-sm font-medium text-gray-700"
                             >
                                 Description
                             </label>
                             <input
-                                id="container-desc"
+                                id="app-desc"
                                 type="text"
                                 value={appDesc}
                                 onChange={DescTyped}
                                 className="mt-1 block w-full border border-gray-300 rounded-md p-2 focus:ring focus:ring-blue-500"
+                                required
                             />
+                            {errors.appDesc && <p className="text-red-500 text-sm mt-1">{errors.appDesc}</p>}
                         </div>
                         <div>
                             <label className="text-sm font-medium text-gray-700">
@@ -136,15 +160,20 @@ export const CreateAppFormModal: React.FC<CreateAppFormModalProps> = ({ showModa
                             </label>
                             {arr.slice().map((item: any, index: number) => (
                                 <div key={index} className="items-center space-x-2">
-                                    <input type="checkbox" id="selectedCont" name={item}
-                                           onChange={() => handleOnChange(arr.indexOf(item))}
-                                           value={item} key={item} className="h-4 w-4 px-1">
-                                    </input>
-                                    <label className="text-sm font-medium text-gray-700">
+                                    <input
+                                        type="checkbox"
+                                        id={`selectedCont-${index}`}
+                                        name={item}
+                                        onChange={() => handleOnChange(index)}
+                                        value={item}
+                                        className="h-4 w-4 px-1"
+                                    />
+                                    <label htmlFor={`selectedCont-${index}`} className="text-sm font-medium text-gray-700">
                                         {item}
                                     </label>
                                 </div>
                             ))}
+                            {errors.groups && <p className="text-red-500 text-sm mt-1">{errors.groups}</p>}
                         </div>
                         <div>
                             <button
@@ -158,8 +187,7 @@ export const CreateAppFormModal: React.FC<CreateAppFormModalProps> = ({ showModa
                 </div>
             </div>
         </dialog>
-    )
-        ;
+    );
 };
 
 export default CreateAppFormModal;

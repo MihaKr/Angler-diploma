@@ -143,7 +143,8 @@ class AnglerListAppContView(APIView):
         elif args:
             if request.data['FILEPATH'] :
                 try:
-                    shutil.copyfile(os.path.join(os.path.dirname(os.path.dirname(__file__)),'media/documents/',request.data['FILEPATH']), 'mnt/docker_host/into_text.txt')
+                    shutil.copyfile(os.path.join(os.path.dirname(os.path.dirname(__file__)),'media/documents/',request.data['FILEPATH']), '../../docker_host/into_text.txt')
+                    #shutil.copyfile(os.path.join(os.path.dirname(os.path.dirname(__file__)),'media/documents/',request.data['FILEPATH']), 'mnt/docker_host/into_text.txt')
                 except Exception as e:
                     print(f"Error occurred while copying and renaming file: {e}")
             args.arguments = request.data
