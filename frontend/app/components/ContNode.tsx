@@ -17,9 +17,9 @@ const ContNode = ({ data,}: { data: AllContainersI }) => {
                     <div>{`Position Y: ${data.position.y}`}</div>
                 </div>
                 <Handle type="target" id="a" position={Position.Left}
-                        style={{background: '#555', height: 16, width: 16}}/>
+                        style={{background: '#555', height: 8, width: 8}}/>
                 <Handle type="source" id="b" position={Position.Right}
-                        style={{background: '#555', height: 16, width: 16}}/>
+                        style={{background: '#555', height: 8, width: 8}}/>
             </div>
         </div>
     );

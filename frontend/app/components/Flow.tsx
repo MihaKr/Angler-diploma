@@ -17,10 +17,12 @@ import ReactFlow, {
     getConnectedEdges,
     CoordinateExtent,
     NodeHandleBounds,
+    MarkerType,
     Position,
     XYPosition,
     useReactFlow,
 } from 'reactflow';
+
 
 import 'reactflow/dist/style.css';
 import ContNode from "@/app/components/ContNode";
@@ -91,6 +93,11 @@ const Flow: React.FC<flowProps> = ({
                 destination: +params.target.replace('node-', ''),
                 // @ts-ignore
                 destination_edge: params.targetHandle,
+                markerEnd: {
+                    type: MarkerType.Arrow,
+                    width: 32,
+                    height: 32,
+                },
             }
 
             console.log(f)
@@ -98,8 +105,14 @@ const Flow: React.FC<flowProps> = ({
             dataPost(f, `http://0.0.0.0:8000/angler_core/cont_link?id=${app_id}`);
             //dataPut(node.data, `http://0.0.0.0:8000/angler_core/app_cont?id=${node.data.app_id}&app_cont_id=${node.data.app_container_id}`);
             console.log(params)
-            setEdges((eds: Edge[]) => addEdge(params, eds));
-        },
+            setEdges((eds: Edge[]) => addEdge({
+                ...params,
+                markerEnd: {
+                    type: MarkerType.Arrow,
+                    width: 32,
+                    height: 32,
+                }
+            }, eds));        },
         [setEdges]
     );
 

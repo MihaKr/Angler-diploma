@@ -1,7 +1,16 @@
 // components/DataDisplayer.tsx
 
 import React, {useEffect, useMemo, useState} from 'react';
-import ReactFlow, {Edge, ReactFlowProvider, Node, Background, useStoreApi, Position, MiniMap} from "reactflow";
+import ReactFlow, {
+    Edge,
+    ReactFlowProvider,
+    Node,
+    Background,
+    useStoreApi,
+    Position,
+    MiniMap,
+    MarkerType
+} from "reactflow";
 import Flow from "@/app/components/Flow";
 import {AllContainersI, DisplayPipelineProps, edge} from "@/app/types";
 
@@ -29,7 +38,12 @@ const DisplayPipeline: React.FC<DisplayPipelineProps> = ({ data, updateData, edg
                 sourceHandle: data.origin_edge,
                 target: `node-${data.destination}`,
                 targetHandle: data.destination_edge,
-                data: data
+                data: data,
+                markerEnd: {
+                    type: MarkerType.Arrow,
+                    width: 32,
+                    height: 32,
+                },
             }))
         );
     }, [edge_data]);

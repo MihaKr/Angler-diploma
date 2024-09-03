@@ -413,3 +413,23 @@ pyrightconfig.json
 .idea/
 .vscode/
 .DS_Store/
+
+#resources
+/containers/stanza_sentiment/stanza_resources
+/containers/stanza_ner/stanza_resources
+/containers/stanza_mwt/stanza_resources
+/containers/stanza_depparse/stanza_resources
+/containers/stanza_tokenize/stanza_resources
+/containers/stanza_pos/stanza_resources
+/containers/stanza_lemma/stanza_resources
+/containers/stanza_ constituency/stanza_resources
+
+/containers/classla_SENTIMENT/classla_resources
+/containers/classla_DEPPARSE/classla_resources
+/containers/classla_LEMMA/classla_resources
+/containers/classla_MWT/classla_resources
+/containers/classla_NER/classla_resources
+/containers/classla_POS/classla_resources
+/containers/tokenize/classla_resources
+/containers/classla_ constituency/classla_resources
+
