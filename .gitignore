@@ -408,3 +408,8 @@ poetry.toml
 
 # LSP config files
 pyrightconfig.json
+
+#IDE configs
+.idea/
+.vscode/
+.DS_Store/
