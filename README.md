@@ -1,7 +1,9 @@
 # Angler
 
 ## Description
-ANGLEr je odprtokodna aplikacija, zasnovana za poenostavitev ustvarjanja cevovodov NLP (Natural Language Processing). Ponuja uporabniški vmesnik, s katerim lahko zgradijo in prilagodijo svoje komponente NLP, ne da bi za to potrebovali napredno znanje programiranja.
+ANGLEr is an open-source application designed to simplify the creation of Natural Language Processing (NLP) pipelines by offering a user interface that allows users to build and customize their own NLP pipelines. The platform democratizes access to NLP tools, enabling researchers and developers alike to create powerful language processing workflows.
+
+To enhance flexibility and scalability, ANGLEr integrates Docker for managing and deploying components as isolated containers. Each component is packaged as a Docker container, ensuring a consistent and reproducible environment across different systems. This containerized approach allows users to incorporate custom plugins or third-party components, regardless of the programming language used, without worrying about dependency conflicts. Docker also enables seamless scaling, making it easy to run pipelines in various environments, from local machines to cloud-based servers, while maintaining performance and reliability. With Docker, ANGLEr provides a robust, modular, and extensible framework that adapts to the evolving needs of NLP workflows.
 
 ## Table of Contents
 - [Installation](#installation)
