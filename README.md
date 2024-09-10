@@ -1,7 +1,7 @@
 # Angler
 
 ## Description
-A brief description of what this project is about and what it aims to achieve.
+ANGLEr je odprtokodna aplikacija, zasnovana za poenostavitev ustvarjanja cevovodov NLP (Natural Language Processing). Ponuja uporabniški vmesnik, s katerim lahko zgradijo in prilagodijo svoje komponente NLP, ne da bi za to potrebovali napredno znanje programiranja.
 
 ## Table of Contents
 - [Installation](#installation)
